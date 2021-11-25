@@ -10,6 +10,7 @@ export class Playlist {
 }
 
 export enum State {
+  MainMenu = 'main_menu',
   PlaylistMenu = 'playlist_menu',
   AwaitingPlaylistName = 'awaiting_playlist_name',
   AwaitingPlaylistRename = 'awaiting_playlist_rename',
@@ -26,7 +27,7 @@ export class User extends FindOrCreate {
   @prop({ type: () => Playlist, default: [] })
   playlists: Playlist[]
 
-  @prop({ enum: State, default: State.PlaylistMenu })
+  @prop({ enum: State, default: State.MainMenu })
   state: State
 
   @prop({ default: -1 })
