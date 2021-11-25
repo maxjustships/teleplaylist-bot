@@ -1,6 +1,6 @@
 import Context from '@/models/Context'
 import { State } from '@/models/User'
-import sendMenu from './sendMenu'
+import sendMenu from './handleMenu'
 
 export async function handlePaginationPrev(ctx: Context) {
   if (ctx.dbuser.state !== State.MainMenu) {

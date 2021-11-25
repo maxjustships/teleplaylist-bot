@@ -1,7 +1,7 @@
 import Context from '@/models/Context'
 import { State } from '@/models/User'
 import { Keyboard, NextFunction } from 'grammy'
-import sendMenu from './sendMenu'
+import sendMenu from './handleMenu'
 import { menuCancelText } from '../helpers/serviceTexts'
 import { handlePlaylistLoad, loadPlaylist } from './handlePlaylistLoad'
 

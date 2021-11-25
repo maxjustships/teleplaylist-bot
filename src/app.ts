@@ -16,7 +16,7 @@ import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import sequentialize from '@/middlewares/sequentialize'
 import startMongo from '@/helpers/startMongo'
 import { brotliDecompress } from 'zlib'
-import sendMenu from './handlers/sendMenu'
+import sendMenu from './handlers/handleMenu'
 import {
   handlePlaylistAddAwaitingName,
   handlePlaylistAddReceivedName,
@@ -69,7 +69,6 @@ async function runApp() {
   // Events
   console.log(serviceText)
 
-  // remove any user input to keep chat tidy
   bot.on('message', removeUserInput)
   bot.hears(
     mainMenuNewPlaylistText,

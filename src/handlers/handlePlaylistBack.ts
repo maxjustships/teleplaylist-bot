@@ -1,5 +1,5 @@
 import Context from '@/models/Context'
-import sendMenu from './sendMenu'
+import sendMenu from './handleMenu'
 
 export default async function handlePlaylistBack(ctx: Context) {
   ctx.dbuser.selectedPlaylist = -1
