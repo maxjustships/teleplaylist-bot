@@ -39,6 +39,6 @@ function languageKeyboard() {
   return keyboard
 }
 
-function localesFiles() {
+export function localesFiles() {
   return readdirSync(`${__dirname}/../../locales`)
 }

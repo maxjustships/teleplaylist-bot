@@ -13,16 +13,44 @@ import bot from '@/helpers/bot'
 import configureI18n from '@/middlewares/configureI18n'
 import i18n from '@/helpers/i18n'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
-import sendHelp from '@/handlers/sendHelp'
 import sequentialize from '@/middlewares/sequentialize'
 import startMongo from '@/helpers/startMongo'
 import { brotliDecompress } from 'zlib'
 import sendMenu from './handlers/sendMenu'
-import handlePlaylistAdd from './handlers/handlePlaylistAdd'
-import handleMessage from './handlers/handleMessage'
-import handlePlaylistDelete from './handlers/handlePlaylistDelete'
-import sendRenamePrompt from './handlers/sendRenamePrompt'
+import {
+  handlePlaylistAddAwaitingName,
+  handlePlaylistAddReceivedName,
+} from './handlers/handlePlaylistAdd'
+import {
+  handlePlaylistDeleteAwaitingConfirmation,
+  handlePlaylistDeleteReceivedReply,
+} from './handlers/handlePlaylistDelete'
 import handlePlaylistBack from './handlers/handlePlaylistBack'
+import {
+  mainMenuNewPlaylistText,
+  mainMenuPrevPageText,
+  menuCancelText,
+  playlistMenuBackText,
+  playlistMenuConfirmDeleteText,
+  playlistMenuRenameText,
+  serviceText,
+} from './helpers/serviceTexts'
+import removeUserInput from './helpers/removeUserInput'
+import {
+  handlePaginationNext,
+  handlePaginationPrev,
+} from './handlers/handlePagination'
+import {
+  mainMenuNextPageText,
+  playlistMenuDeleteText,
+} from './helpers/serviceTexts'
+import { handlePlaylistLoad } from './handlers/handlePlaylistLoad'
+import { requireState } from './helpers/requireState'
+import { State } from './models/User'
+import {
+  handlePlaylistRenameAwaitingRename,
+  handlePlaylistRenameReceivedReply,
+} from './handlers/handlePlaylistRename'
 
 async function runApp() {
   console.log('Starting app...')
@@ -39,13 +67,52 @@ async function runApp() {
   bot.command('start', sendMenu)
   bot.command('language', sendLanguage)
   // Events
-  bot.on('message:text', handleMessage)
+  console.log(serviceText)
+
+  // remove any user input to keep chat tidy
+  bot.on('message', removeUserInput)
+  bot.hears(
+    mainMenuNewPlaylistText,
+    requireState(State.MainMenu),
+    handlePlaylistAddAwaitingName
+  )
+  bot.hears(
+    mainMenuPrevPageText,
+    requireState(State.MainMenu),
+    handlePaginationPrev
+  )
+  bot.hears(
+    mainMenuNextPageText,
+    requireState(State.MainMenu),
+    handlePaginationNext
+  )
+  bot.hears(
+    playlistMenuBackText,
+    requireState(State.PlaylistMenu),
+    handlePlaylistBack
+  )
+  bot.hears(
+    playlistMenuDeleteText,
+    requireState(State.PlaylistMenu),
+    handlePlaylistDeleteAwaitingConfirmation
+  )
+  bot.hears(
+    playlistMenuConfirmDeleteText,
+    requireState(State.AwaitingPlaylistDeletion),
+    handlePlaylistDeleteReceivedReply
+  )
+  bot.hears(
+    playlistMenuRenameText,
+    requireState(State.PlaylistMenu),
+    handlePlaylistRenameAwaitingRename
+  )
+  bot.on('message:text', handlePlaylistAddReceivedName)
+  bot.on('message:text', handlePlaylistLoad)
+  bot.on('message:text', handlePlaylistRenameReceivedReply)
+  bot.on('message:text', handlePlaylistDeleteReceivedReply)
+
   // Actions
   bot.callbackQuery(localeActions, setLanguage)
-  bot.callbackQuery('playlist-add', handlePlaylistAdd)
-  bot.callbackQuery('playlist-back', handlePlaylistBack)
-  bot.callbackQuery(/^rename-/, sendRenamePrompt)
-  bot.callbackQuery(/^delete-/, handlePlaylistDelete)
   // Errors
   bot.catch(console.error)
   // Start bot

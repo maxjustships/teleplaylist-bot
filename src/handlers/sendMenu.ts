@@ -5,19 +5,20 @@ import { Keyboard } from 'grammy'
 const PLAYLIST_PER_PAGE = 3
 
 export default async function sendMenu(ctx: Context) {
-  ctx.dbuser.state = State.MainMenu
-  const maxPage = Math.ceil(ctx.dbuser.playlists.length / PLAYLIST_PER_PAGE) - 1
+  const playlistAmount = ctx.dbuser.playlists.length
 
-  if (ctx.dbuser.selectedPage < 0) {
-    ctx.dbuser.selectedPage = 0
-  }
+  ctx.dbuser.state = State.MainMenu
+  const maxPage = Math.ceil(playlistAmount / PLAYLIST_PER_PAGE) - 1
+
   if (ctx.dbuser.selectedPage > maxPage) {
     ctx.dbuser.selectedPage = maxPage
+  }
+  if (ctx.dbuser.selectedPage < 0) {
+    ctx.dbuser.selectedPage = 0
   }
 
   await ctx.dbuser.save()
 
-  const playlistAmount = ctx.dbuser.playlists.length
   return ctx.reply(
     ctx.i18n.t('main_menu', {
       playlistAmount,
@@ -36,18 +37,6 @@ export default async function sendMenu(ctx: Context) {
 function getMainKeyboard(ctx: Context, maxPage: number): Keyboard {
   const keyboard = new Keyboard()
 
-  let serviceButtons
-  if (ctx.dbuser.playlists.length > 0) {
-    serviceButtons = [
-      ctx.i18n.t('main_menu_keyboard_left'),
-      `${ctx.dbuser.selectedPage + 1}/${maxPage + 1}`,
-      ctx.i18n.t('main_menu_keyboard_right'),
-      ctx.i18n.t('main_menu_keyboard_add'),
-    ]
-  } else {
-    serviceButtons = [ctx.i18n.t('main_menu_keyboard_add')]
-  }
-
   for (
     let i = ctx.dbuser.selectedPage * PLAYLIST_PER_PAGE;
     i <
@@ -60,9 +49,22 @@ function getMainKeyboard(ctx: Context, maxPage: number): Keyboard {
     keyboard.text(ctx.dbuser.playlists[i].name).row()
   }
 
-  for (let serviceButton of serviceButtons) {
+  for (let serviceButton of getMainKeyboardButtons(ctx, maxPage)) {
     keyboard.text(serviceButton)
   }
 
   return keyboard
+}
+
+function getMainKeyboardButtons(ctx, maxPage: number): string[] {
+  if (ctx.dbuser.playlists.length > 0) {
+    return [
+      ctx.i18n.t('main_menu_keyboard_left'),
+      `${ctx.dbuser.selectedPage + 1}/${maxPage + 1}`,
+      ctx.i18n.t('main_menu_keyboard_right'),
+      ctx.i18n.t('main_menu_keyboard_add'),
+    ]
+  } else {
+    return [ctx.i18n.t('main_menu_keyboard_add')]
+  }
 }

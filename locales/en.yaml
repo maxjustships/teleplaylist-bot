@@ -2,7 +2,7 @@ name: English
 language: Please, select the language.
 language_selected: <b>This bot</b> now speaks English.
 main_menu: |
-  You currently have ${playlistAmount} playlist${plural}.
+  Amount of playlists: ${playlistAmount}.
 
   ${mainInfo}
 main_menu_info_empty: To start using the bot just add a playlist by clicking the menu below.
@@ -11,7 +11,9 @@ main_menu_keyboard_left: ⬅️
 main_menu_keyboard_right: ➡️
 main_menu_keyboard_add: New playlist
 playlist_add_name_prompt: Enter new playlist name.
-playlist_add_name_error_exists: You already have a playlist with this name. Try another.
+playlist_add_name_error_exists: You already have a playlist with this name. Please, try another name.
+playlist_add_name_error_service: You cannot use service words to name your playlist. Please, try another name.
+main_menu_select_error: No playlist with specified name "${playlistName}"
 playlist_menu: |
   "${playlistName}" playlist selected.
 
@@ -21,3 +23,6 @@ playlist_menu_delete: Delete playlist
 playlist_menu_back: Back to main menu
 playlist_rename_prompt: Enter new name for the playlist "${playlistName}"
 playlist_rename_error_exists: You already have a playlist with this name. Try another.
+playlist_menu_delete_prompt: Are you sure you want to delete the "${playlistName}" playlist
+playlist_menu_confirm_delete: Yes, delete playlist
+keyboard_cancel: Cancel

@@ -12,7 +12,8 @@ export class Playlist {
 export enum State {
   MainMenu = 'main_menu',
   PlaylistMenu = 'playlist_menu',
-  AwaitingPlaylistName = 'awaiting_playlist_name',
+  AwaitingName = 'awaiting_playlist_name',
+  AwaitingPlaylistDeletion = 'awaiting_playlist_deletion',
   AwaitingPlaylistRename = 'awaiting_playlist_rename',
 }
 
