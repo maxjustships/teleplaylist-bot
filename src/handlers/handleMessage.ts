@@ -20,8 +20,14 @@ export default async function handleMessage(ctx: Context) {
 
   // main keyboard service buttons processing
   switch (ctx.msg.text) {
-    case ctx.i18n.t('playlist_add_button'):
+    case ctx.i18n.t('main_menu_keyboard_add'):
       return handlePlaylistAdd(ctx)
+    case ctx.i18n.t('main_menu_keyboard_left'):
+      ctx.dbuser.selectedPage -= 1
+      return sendMenu(ctx)
+    case ctx.i18n.t('main_menu_keyboard_right'):
+      ctx.dbuser.selectedPage += 1
+      return sendMenu(ctx)
   }
 
   // playlist keyboard service buttons processing

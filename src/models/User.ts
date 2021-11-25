@@ -32,6 +32,9 @@ export class User extends FindOrCreate {
 
   @prop({ default: -1 })
   selectedPlaylist: number
+
+  @prop({ default: 0 })
+  selectedPage: number
 }
 
 const UserModel = getModelForClass(User, {

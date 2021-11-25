@@ -9,7 +9,7 @@ main_menu_info_empty: To start using the bot just add a playlist by clicking the
 main_menu_info: To manage a playlist just select it from the menu below.
 main_menu_keyboard_left: ⬅️
 main_menu_keyboard_right: ➡️
-playlist_add_button: New playlist
+main_menu_keyboard_add: New playlist
 playlist_add_name_prompt: Enter new playlist name.
 playlist_add_name_error_exists: You already have a playlist with this name. Try another.
 playlist_menu: |
