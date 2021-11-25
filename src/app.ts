@@ -16,6 +16,14 @@ import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import sendHelp from '@/handlers/sendHelp'
 import sequentialize from '@/middlewares/sequentialize'
 import startMongo from '@/helpers/startMongo'
+import { brotliDecompress } from 'zlib'
+import sendMenu from './handlers/sendMenu'
+import handlePlaylistAdd from './handlers/handlePlaylistAdd'
+import handleMessage from './handlers/handleMessage'
+import { handlePlaylistLoad } from './handlers/handlePlaylistLoad'
+import handlePlaylistDelete from './handlers/handlePlaylistDelete'
+import handlePlaylistRename from './handlers/handlePlaylistRename'
+import handlePlaylistBack from './handlers/handlePlaylistBack'
 
 async function runApp() {
   console.log('Starting app...')
@@ -29,10 +37,18 @@ async function runApp() {
   bot.use(i18n.middleware())
   bot.use(configureI18n)
   // Commands
-  bot.command(['help', 'start'], sendHelp)
+  bot.command('help', sendHelp)
+  bot.command(['start', 'menu'], sendMenu)
   bot.command('language', sendLanguage)
+  // Events
+  bot.on('message:text', handleMessage)
   // Actions
   bot.callbackQuery(localeActions, setLanguage)
+  bot.callbackQuery('playlist-add', handlePlaylistAdd)
+  bot.callbackQuery('playlist-back', handlePlaylistBack)
+  bot.callbackQuery(/^select-/, handlePlaylistLoad)
+  bot.callbackQuery(/^rename-/, handlePlaylistRename)
+  bot.callbackQuery(/^delete-/, handlePlaylistDelete)
   // Errors
   bot.catch(console.error)
   // Start bot

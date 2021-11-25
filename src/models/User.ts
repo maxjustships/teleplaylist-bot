@@ -2,6 +2,19 @@ import * as findorcreate from 'mongoose-findorcreate'
 import { FindOrCreate } from '@typegoose/typegoose/lib/defaultClasses'
 import { getModelForClass, plugin, prop } from '@typegoose/typegoose'
 
+export class Playlist {
+  @prop()
+  public name: string
+  @prop({ default: [] })
+  public songIds: string[]
+}
+
+export enum State {
+  PlaylistMenu = 'playlist_menu',
+  AwaitingPlaylistName = 'awaiting_playlist_name',
+  AwaitingPlaylistRename = 'awaiting_playlist_rename',
+}
+
 @plugin(findorcreate)
 export class User extends FindOrCreate {
   @prop({ required: true, index: true, unique: true })
@@ -9,6 +22,15 @@ export class User extends FindOrCreate {
 
   @prop({ required: true, default: 'en' })
   language: string
+
+  @prop({ type: () => Playlist, default: [] })
+  playlists: Playlist[]
+
+  @prop({ enum: State, default: State.PlaylistMenu })
+  state: State
+
+  @prop({ default: -1 })
+  selectedPlaylist: number
 }
 
 const UserModel = getModelForClass(User, {

@@ -1,5 +1,24 @@
 name: English
-help: |
-  <b>This bot</b> allows you to see how Telegram bots can be built.
 language: Please, select the language.
 language_selected: <b>This bot</b> now speaks English.
+help: |
+  This bot can help you manage your audio playlists in telegram!
+  Type /menu to get main menu for the playlists.
+menu: |
+  Main menu. Manage your playlists here.
+
+  You currently have ${playlistAmount} playlist${plural}.
+
+  If you lose or delete this message, just type /menu again.
+playlist_add_button: New playlist
+playlist_add_name_prompt: Enter new playlist name.
+playlist_add_name_error_exists: You already have a playlist with this name. Try another.
+playlist_menu: |
+  "${playlistName}" playlist selected.
+
+  Under construction.
+playlist_menu_rename: Rename playlist
+playlist_menu_delete: Delete playlist
+playlist_menu_back: Playlists menu
+playlist_rename_prompt: Enter new name for the playlist "${playlistName}"
+playlist_rename_error_exists: You already have a playlist with this name. Try another.
