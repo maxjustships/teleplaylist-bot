@@ -51,6 +51,8 @@ import {
   handlePlaylistRenameAwaitingRename,
   handlePlaylistRenameReceivedReply,
 } from './handlers/handlePlaylistRename'
+import { handleAddAudio } from './handlers/handleAddAudio'
+import { handleDeleteAudio } from './handlers/handleDeleteAudio'
 
 async function runApp() {
   console.log('Starting app...')
@@ -105,6 +107,7 @@ async function runApp() {
     requireState(State.PlaylistMenu),
     handlePlaylistRenameAwaitingRename
   )
+  bot.on('message:audio', requireState(State.PlaylistMenu), handleAddAudio)
   bot.on('message:text', handlePlaylistAddReceivedName)
   bot.on('message:text', handlePlaylistLoad)
   bot.on('message:text', handlePlaylistRenameReceivedReply)
@@ -112,6 +115,7 @@ async function runApp() {
 
   // Actions
   bot.callbackQuery(localeActions, setLanguage)
+  bot.callbackQuery('deleteAudio', handleDeleteAudio)
   // Errors
   bot.catch(console.error)
   // Start bot

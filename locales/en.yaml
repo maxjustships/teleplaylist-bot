@@ -26,3 +26,5 @@ playlist_rename_error_exists: You already have a playlist with this name. Try an
 playlist_menu_delete_prompt: Are you sure you want to delete the "${playlistName}" playlist
 playlist_menu_confirm_delete: Yes, delete playlist
 keyboard_cancel: Cancel
+audio_add: Audio file added!
+audio_delete: Delete audio

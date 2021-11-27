@@ -2,11 +2,18 @@ import * as findorcreate from 'mongoose-findorcreate'
 import { FindOrCreate } from '@typegoose/typegoose/lib/defaultClasses'
 import { getModelForClass, plugin, prop } from '@typegoose/typegoose'
 
+export class Audio {
+  @prop()
+  public messageId: number
+  @prop()
+  public fileId: string
+}
+
 export class Playlist {
   @prop()
   public name: string
   @prop({ default: [] })
-  public songIds: string[]
+  public audio: Audio[]
 }
 
 export enum State {
