@@ -51,8 +51,9 @@ import {
   handlePlaylistRenameAwaitingRename,
   handlePlaylistRenameReceivedReply,
 } from './handlers/handlePlaylistRename'
-import { handleAddAudio } from './handlers/handleAddAudio'
-import { handleDeleteAudio } from './handlers/handleDeleteAudio'
+import { handleAddAudio } from './handlers/handleAudioAdd'
+import { handleDeleteAudio } from './handlers/handleAudioDelete'
+import Context from './models/Context'
 
 async function runApp() {
   console.log('Starting app...')

@@ -3,7 +3,8 @@ import { State } from '@/models/User'
 import { Keyboard, NextFunction } from 'grammy'
 import sendMenu from './handleMenu'
 import { menuCancelText } from '../helpers/serviceTexts'
-import { handlePlaylistLoad, loadPlaylist } from './handlePlaylistLoad'
+import { handlePlaylistLoad, loadPlaylistMenu } from './handlePlaylistLoad'
+import deleteAudio from './deleteAudio'
 
 export async function handlePlaylistDeleteAwaitingConfirmation(ctx: Context) {
   ctx.dbuser.state = State.AwaitingPlaylistDeletion
@@ -33,8 +34,10 @@ export async function handlePlaylistDeleteReceivedReply(
     return next()
   }
   if (menuCancelText.includes(ctx.msg.text)) {
-    return loadPlaylist(ctx)
+    return loadPlaylistMenu(ctx)
   }
+
+  await deleteAudio(ctx)
 
   ctx.dbuser.playlists.splice(ctx.dbuser.selectedPlaylist, 1)
   return sendMenu(ctx)

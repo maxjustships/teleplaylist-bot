@@ -3,7 +3,7 @@ import { FindOrCreate } from '@typegoose/typegoose/lib/defaultClasses'
 import { getModelForClass, plugin, prop } from '@typegoose/typegoose'
 
 export class Audio {
-  @prop()
+  @prop({ index: true })
   public messageId: number
   @prop()
   public fileId: string

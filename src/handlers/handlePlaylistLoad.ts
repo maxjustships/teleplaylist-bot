@@ -2,6 +2,7 @@ import Context from '@/models/Context'
 import { createSecretKey } from 'crypto'
 import { Keyboard, NextFunction } from 'grammy'
 import { Playlist, State } from '../models/User'
+import sendAudio from './sendAudio'
 
 export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
   if (ctx.dbuser.state !== State.MainMenu) {
@@ -21,23 +22,14 @@ export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
   }
 
   ctx.dbuser.selectedPlaylist = playlistIndex
-  return loadPlaylist(ctx)
+  await loadPlaylistMenu(ctx)
+  return loadPlaylistAudio(ctx)
 }
 
-export async function loadPlaylist(ctx: Context) {
+export async function loadPlaylistMenu(ctx: Context) {
   ctx.dbuser.state = State.PlaylistMenu
   await ctx.dbuser.save()
-  return ctx.reply(
-    ctx.i18n.t('playlist_menu', {
-      playlistName: ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name,
-    }),
-    {
-      reply_markup: getPlaylistKeyboard(ctx),
-    }
-  )
-}
 
-function getPlaylistKeyboard(ctx: Context): Keyboard {
   const keyboard = new Keyboard()
 
   keyboard
@@ -48,5 +40,32 @@ function getPlaylistKeyboard(ctx: Context): Keyboard {
     .text(ctx.i18n.t('playlist_menu_back'))
     .row()
 
-  return keyboard
+  return ctx.reply(
+    ctx.i18n.t('playlist_menu', {
+      playlistName: ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name,
+    }),
+    {
+      reply_markup: keyboard,
+    }
+  )
+}
+
+export async function loadPlaylistAudio(ctx: Context) {
+  for (
+    let i = 0;
+    i < ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio.length;
+    i++
+  ) {
+    const audioMessage = await sendAudio(
+      ctx,
+      ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio[i].fileId
+    )
+    ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio[i].messageId =
+      audioMessage.message_id
+    ctx.dbuser.markModified(
+      `playlists.${ctx.dbuser.selectedPlaylist}.audio.${i}.messageId`
+    )
+  }
+
+  return ctx.dbuser.save()
 }

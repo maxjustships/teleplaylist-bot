@@ -1,6 +1,6 @@
 import Context from '@/models/Context'
 import { State } from '@/models/User'
-import { loadPlaylist } from './handlePlaylistLoad'
+import { loadPlaylistMenu } from './handlePlaylistLoad'
 import { Keyboard, NextFunction } from 'grammy'
 import { menuCancelText, serviceText } from '../helpers/serviceTexts'
 
@@ -27,7 +27,7 @@ export async function handlePlaylistRenameReceivedReply(
   }
 
   if (menuCancelText.includes(ctx.msg.text)) {
-    return loadPlaylist(ctx)
+    return loadPlaylistMenu(ctx)
   }
 
   if (serviceText.includes(ctx.msg.text)) {
@@ -46,5 +46,5 @@ export async function handlePlaylistRenameReceivedReply(
   ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name = ctx.msg.text
   ctx.dbuser.state = State.PlaylistMenu
   await ctx.dbuser.save()
-  return loadPlaylist(ctx)
+  return loadPlaylistMenu(ctx)
 }
