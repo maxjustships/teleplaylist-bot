@@ -54,6 +54,10 @@ import {
 import { handleAddAudio } from './handlers/handleAudioAdd'
 import { handleDeleteAudio } from './handlers/handleAudioDelete'
 import Context from './models/Context'
+import {
+  mainMenuLanguageText,
+  mainMenuLanguageSelectText,
+} from './helpers/serviceTexts'
 
 async function runApp() {
   console.log('Starting app...')
@@ -68,7 +72,6 @@ async function runApp() {
   bot.use(configureI18n)
   // Commands
   bot.command('start', sendMenu)
-  bot.command('language', sendLanguage)
   // Events
   console.log(serviceText)
 
@@ -87,6 +90,12 @@ async function runApp() {
     mainMenuNextPageText,
     requireState(State.MainMenu),
     handlePaginationNext
+  )
+  bot.hears(mainMenuLanguageText, requireState(State.MainMenu), sendLanguage)
+  bot.hears(
+    mainMenuLanguageSelectText,
+    requireState(State.AwaitingLanguage),
+    setLanguage
   )
   bot.hears(
     playlistMenuBackText,

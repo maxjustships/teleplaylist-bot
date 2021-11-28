@@ -1,6 +1,7 @@
 import Context from '@/models/Context'
 import { State } from '@/models/User'
 import { Keyboard } from 'grammy'
+import i18n from '@/helpers/i18n'
 
 const PLAYLIST_PER_PAGE = 3
 
@@ -59,12 +60,16 @@ function getMainKeyboard(ctx: Context, maxPage: number): Keyboard {
 function getMainKeyboardButtons(ctx, maxPage: number): string[] {
   if (ctx.dbuser.playlists.length > 0) {
     return [
-      ctx.i18n.t('main_menu_keyboard_add'),
+      ctx.i18n.t('main_menu_keyboard_language'),
       ctx.i18n.t('main_menu_keyboard_left'),
       `${ctx.dbuser.selectedPage + 1}/${maxPage + 1}`,
       ctx.i18n.t('main_menu_keyboard_right'),
+      ctx.i18n.t('main_menu_keyboard_add'),
     ]
   } else {
-    return [ctx.i18n.t('main_menu_keyboard_add')]
+    return [
+      ctx.i18n.t('main_menu_keyboard_add'),
+      ctx.i18n.t('main_menu_keyboard_language'),
+    ]
   }
 }

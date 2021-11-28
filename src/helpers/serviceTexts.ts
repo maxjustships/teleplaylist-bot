@@ -15,6 +15,10 @@ export const mainMenuPrevPageText = getLocaleValuesForKey(
 export const mainMenuNextPageText = getLocaleValuesForKey(
   'main_menu_keyboard_right'
 )
+export const mainMenuLanguageText = getLocaleValuesForKey(
+  'main_menu_keyboard_language'
+)
+export const mainMenuLanguageSelectText = getLocaleValuesForKey('name')
 export const playlistMenuRenameText = getLocaleValuesForKey(
   'playlist_menu_rename'
 )
@@ -35,6 +39,8 @@ export const serviceText = [
   playlistMenuDeleteText,
   playlistMenuBackText,
   playlistMenuConfirmDeleteText,
+  mainMenuLanguageText,
+  mainMenuLanguageSelectText,
   menuCancelText,
 ].flat()
 

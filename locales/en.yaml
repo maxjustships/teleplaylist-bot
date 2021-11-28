@@ -1,6 +1,7 @@
 name: English
 language: Please, select the language.
 language_selected: <b>This bot</b> now speaks English.
+language_select_error: Please, choose the correct language.
 main_menu: |
   Amount of playlists: ${playlistAmount}.
 
@@ -10,6 +11,7 @@ main_menu_info: To manage a playlist just select it from the menu below.
 main_menu_keyboard_left: ⬅️
 main_menu_keyboard_right: ➡️
 main_menu_keyboard_add: New playlist
+main_menu_keyboard_language: Language
 playlist_add_name_prompt: Enter new playlist name.
 playlist_add_name_error_exists: You already have a playlist with this name. Please, try another name.
 playlist_add_name_error_service: You cannot use service words to name your playlist. Please, try another name.
