@@ -3,30 +3,35 @@ language: Please, select the language.
 language_selected: <b>This bot</b> now speaks English.
 language_select_error: Please, choose the correct language.
 main_menu: |
-  Amount of playlists: ${playlistAmount}.
+  🎵 Amount of playlists: ${playlistAmount}.
 
   ${mainInfo}
-main_menu_info_empty: To start using the bot just add a playlist by clicking the menu below.
-main_menu_info: To manage a playlist just select it from the menu below.
+
+  To show this menu again if you delete it, just type in /start
+main_menu_info_empty: 🤔 To start using the bot just add a playlist by clicking the option in the menu below.
+main_menu_info: 🎶 To manage a playlist just select it from the menu below. You can add a new one from there as well.
 main_menu_keyboard_left: ⬅️
 main_menu_keyboard_right: ➡️
-main_menu_keyboard_add: New playlist
-main_menu_keyboard_language: Language
-playlist_add_name_prompt: Enter new playlist name.
-playlist_add_name_error_exists: You already have a playlist with this name. Please, try another name.
-playlist_add_name_error_service: You cannot use service words to name your playlist. Please, try another name.
-main_menu_select_error: No playlist with specified name "${playlistName}"
+main_menu_keyboard_add: 🆕 New playlist
+main_menu_keyboard_language: 🌐 Language 🌐
+playlist_add_name_prompt: ❓ Enter new playlist name.
+playlist_add_name_error_exists: 😕 You already have a playlist with this name. Please, try another name.
+playlist_add_name_error_service: 😕 You cannot use service words to name your playlist. Please, try another name.
+main_menu_select_error: 🤔 No playlist with specified name "${playlistName}"
 playlist_menu: |
-  "${playlistName}" playlist selected.
+  "${playlistName}" playlist is selected.
 
-  Under construction.
-playlist_menu_rename: Rename playlist
-playlist_menu_delete: Delete playlist
-playlist_menu_back: Back to main menu
-playlist_rename_prompt: Enter new name for the playlist "${playlistName}"
-playlist_rename_error_exists: You already have a playlist with this name. Try another.
-playlist_menu_delete_prompt: Are you sure you want to delete the "${playlistName}" playlist
-playlist_menu_confirm_delete: Yes, delete playlist
-keyboard_cancel: Cancel
-audio_add: Audio file added!
-audio_delete: Delete audio
+  To add audios to the playlist simply upload them or forward messages with your files here.
+  Click on the "Delete audio" below each of the audios to remove them from playlist.
+
+  You can rename or remove playlist in the menu below.
+  ‼️ If you go back to main menu, your tracks will dissappear, but don't worry, they will return when you pick this playlist again! 👌
+playlist_menu_rename: 🔄 Rename playlist
+playlist_menu_delete: ❌ Delete playlist
+playlist_menu_back: 🔙 Back to main menu
+playlist_rename_prompt: ❓ Enter new name for the playlist "${playlistName}"
+playlist_rename_error_exists: 😕 You already have a playlist with this name. Try another.
+playlist_menu_delete_prompt: ❓ Are you sure you want to delete the "${playlistName}" playlist?
+playlist_menu_confirm_delete: ✅ Yes, delete playlist
+keyboard_cancel: ❎ Cancel
+audio_delete: 🗑️ Delete audio
