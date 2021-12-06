@@ -3,7 +3,7 @@ import { load } from 'js-yaml'
 import { readFileSync, readdirSync } from 'fs'
 import Context from '@/models/Context'
 import { State } from '@/models/User'
-import sendMenu from './handleMenu'
+import sendMenu from '@/handlers/handleMenu'
 
 export const localeActions = localesFiles().map((file) => file.split('.')[0])
 const nameToCode = Object.fromEntries(
@@ -12,7 +12,6 @@ const nameToCode = Object.fromEntries(
     const localeName = load(
       readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8')
     ).name as string
-    console.log([localeName, localeCode])
 
     return [localeName, localeCode]
   })

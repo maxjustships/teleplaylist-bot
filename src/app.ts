@@ -15,50 +15,46 @@ import i18n from '@/helpers/i18n'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import sequentialize from '@/middlewares/sequentialize'
 import startMongo from '@/helpers/startMongo'
-import { brotliDecompress } from 'zlib'
-import sendMenu from './handlers/handleMenu'
+import sendMenu from '@/handlers/handleMenu'
 import {
   handlePlaylistAddAwaitingName,
   handlePlaylistAddReceivedName,
-} from './handlers/handlePlaylistAdd'
+} from '@/handlers/handlePlaylistAdd'
 import {
   handlePlaylistDeleteAwaitingConfirmation,
   handlePlaylistDeleteReceivedReply,
-} from './handlers/handlePlaylistDelete'
-import handlePlaylistBack from './handlers/handlePlaylistBack'
+} from '@/handlers/handlePlaylistDelete'
+import handlePlaylistBack from '@/handlers/handlePlaylistBack'
 import {
   mainMenuNewPlaylistText,
   mainMenuPrevPageText,
-  menuCancelText,
   playlistMenuBackText,
   playlistMenuConfirmDeleteText,
   playlistMenuRenameText,
-  serviceText,
-} from './helpers/serviceTexts'
-import removeUserInput from './helpers/removeUserInput'
+} from '@/helpers/serviceTexts'
+import removeUserInput from '@/helpers/removeUserInput'
 import {
   handlePaginationNext,
   handlePaginationPrev,
-} from './handlers/handlePagination'
+} from '@/handlers/handlePagination'
 import {
   mainMenuNextPageText,
   playlistMenuDeleteText,
-} from './helpers/serviceTexts'
-import { handlePlaylistLoad } from './handlers/handlePlaylistLoad'
-import { requireState } from './helpers/requireState'
-import { State } from './models/User'
+} from '@/helpers/serviceTexts'
+import { handlePlaylistLoad } from '@/handlers/handlePlaylistLoad'
+import { requireState } from '@/helpers/requireState'
+import { State } from '@/models/User'
 import {
   handlePlaylistRenameAwaitingRename,
   handlePlaylistRenameReceivedReply,
-} from './handlers/handlePlaylistRename'
-import { handleAddAudio } from './handlers/handleAudioAdd'
-import { handleDeleteAudio } from './handlers/handleAudioDelete'
-import Context from './models/Context'
+} from '@/handlers/handlePlaylistRename'
+import { handleAddAudio } from '@/handlers/handleAudioAdd'
+import { handleDeleteAudio } from '@/handlers/handleAudioDelete'
 import {
   mainMenuLanguageText,
   mainMenuLanguageSelectText,
-} from './helpers/serviceTexts'
-import blockIfPublic from './helpers/blockIfPublic'
+} from '@/helpers/serviceTexts'
+import blockIfPublic from '@/helpers/blockIfPublic'
 
 async function runApp() {
   console.log('Starting app...')

@@ -1,7 +1,6 @@
 import Context from '@/models/Context'
 import { Audio } from '@/models/User'
-import { InlineKeyboard } from 'grammy'
-import sendAudio from './sendAudio'
+import sendAudio from '@/handlers/sendAudio'
 
 export async function handleAddAudio(ctx: Context) {
   const fileId = ctx.msg.audio.file_id

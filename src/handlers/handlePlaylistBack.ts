@@ -1,6 +1,6 @@
 import Context from '@/models/Context'
-import deleteAudio from './deleteAudio'
-import sendMenu from './handleMenu'
+import deleteAudio from '@/handlers/deleteAudio'
+import sendMenu from '@/handlers/handleMenu'
 
 export default async function handlePlaylistBack(ctx: Context) {
   await deleteAudio(ctx)

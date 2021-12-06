@@ -1,7 +1,6 @@
 import Context from '@/models/Context'
 import { State } from '@/models/User'
 import { Keyboard } from 'grammy'
-import i18n from '@/helpers/i18n'
 
 const PLAYLIST_PER_PAGE = 3
 

@@ -1,8 +1,7 @@
 import Context from '@/models/Context'
-import { createSecretKey } from 'crypto'
 import { Keyboard, NextFunction } from 'grammy'
-import { Playlist, State } from '../models/User'
-import sendAudio from './sendAudio'
+import { State } from '@/models/User'
+import sendAudio from '@/handlers/sendAudio'
 
 export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
   if (ctx.dbuser.state !== State.MainMenu) {
