@@ -58,6 +58,7 @@ import {
   mainMenuLanguageText,
   mainMenuLanguageSelectText,
 } from './helpers/serviceTexts'
+import blockIfPublic from './helpers/blockIfPublic'
 
 async function runApp() {
   console.log('Starting app...')
@@ -70,11 +71,11 @@ async function runApp() {
   bot.use(attachUser)
   bot.use(i18n.middleware())
   bot.use(configureI18n)
+  bot.use(blockIfPublic)
+
   // Commands
   bot.command('start', sendMenu)
   // Events
-  console.log(serviceText)
-
   bot.on('message', removeUserInput)
   bot.hears(
     mainMenuNewPlaylistText,
