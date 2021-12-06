@@ -1,10 +1,10 @@
 {
-  "name": "telegram-bot-starter",
+  "name": "telegram-playlist-bot",
   "version": "1.0.0",
-  "description": "Telegram bot starter based on grammY",
+  "description": "Telegram bot that allows you to manage playlists. Based on telegram bot starter by backmeupplz",
   "main": "dist/app.js",
   "repository": "https://github.com/Borodutch/telegram-bot-template",
-  "author": "backmeupplz <backmeupplz@gmail.com>",
+  "author": "moody_cookie <reishmax@gmail.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
