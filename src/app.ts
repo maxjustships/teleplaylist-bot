@@ -124,7 +124,19 @@ async function runApp() {
   bot.callbackQuery(localeActions, setLanguage)
   bot.callbackQuery('deleteAudio', handleDeleteAudio)
   // Errors
-  bot.catch(console.error)
+  bot.catch(async (err) => {
+    console.error(err)
+
+    const ctx = err.ctx
+    await ctx.api.sendMessage(
+      process.env.ADMIN,
+      `
+\`\`\`
+${JSON.stringify(err)}
+\`\`\`
+    `
+    )
+  })
   // Start bot
   await bot.init()
   run(bot)
