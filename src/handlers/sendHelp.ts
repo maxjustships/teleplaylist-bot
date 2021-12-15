@@ -1,6 +1,5 @@
 import Context from '@/models/Context'
-import { NextFunction } from 'grammy'
 
-export default function sendHelp(ctx: Context, next: NextFunction) {
+export default function sendHelp(ctx: Context) {
   return ctx.reply(ctx.i18n.t('help'))
 }

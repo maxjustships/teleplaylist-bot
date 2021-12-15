@@ -1,8 +1,8 @@
-import Context from '@/models/Context'
 import { Audio } from '@/models/User'
+import Context from '@/models/Context'
 import sendAudio from '@/handlers/sendAudio'
 
-export async function handleAddAudio(ctx: Context) {
+export default async function handleAddAudio(ctx: Context) {
   const fileId = ctx.msg.audio.file_id
 
   const audioMessage = await sendAudio(ctx, fileId)

@@ -1,8 +1,8 @@
-import Context from '@/models/Context'
 import { State } from '@/models/User'
+import Context from '@/models/Context'
 import sendMenu from '@/handlers/handleMenu'
 
-export async function handlePaginationPrev(ctx: Context) {
+export function handlePaginationPrev(ctx: Context) {
   if (ctx.dbuser.state !== State.MainMenu) {
     return
   }
@@ -10,7 +10,7 @@ export async function handlePaginationPrev(ctx: Context) {
   return sendMenu(ctx)
 }
 
-export async function handlePaginationNext(ctx: Context) {
+export function handlePaginationNext(ctx: Context) {
   if (ctx.dbuser.state !== State.MainMenu) {
     return
   }

@@ -1,10 +1,10 @@
-import Context from '@/models/Context'
-import { State } from '@/models/User'
 import { Keyboard, NextFunction } from 'grammy'
-import sendMenu from '@/handlers/handleMenu'
-import { menuCancelText } from '@/helpers/serviceTexts'
+import { State } from '@/models/User'
 import { loadPlaylistMenu } from '@/handlers/handlePlaylistLoad'
+import { menuCancelText } from '@/helpers/serviceTexts'
+import Context from '@/models/Context'
 import deleteAudio from '@/handlers/deleteAudio'
+import sendMenu from '@/handlers/handleMenu'
 
 export async function handlePlaylistDeleteAwaitingConfirmation(ctx: Context) {
   ctx.dbuser.state = State.AwaitingPlaylistDeletion

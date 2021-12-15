@@ -1,6 +1,6 @@
 import Context from '@/models/Context'
 
-export async function handleDeleteAudio(ctx: Context) {
+export default function handleDeleteAudio(ctx: Context) {
   const messageId = ctx.callbackQuery.message.message_id
 
   const deletedSongIndex = ctx.dbuser.playlists[

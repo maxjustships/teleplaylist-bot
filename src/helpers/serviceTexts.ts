@@ -1,6 +1,6 @@
+import { load } from 'js-yaml'
 import { localesFiles } from '@/handlers/language'
 import { readFileSync } from 'fs'
-import { load } from 'js-yaml'
 
 const localesData = localesFiles().map((locale) =>
   load(readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8'))

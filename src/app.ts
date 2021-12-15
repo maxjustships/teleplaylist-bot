@@ -5,17 +5,11 @@ import 'module-alias/register'
 import * as dotenv from 'dotenv'
 dotenv.config({ path: `${__dirname}/../.env` })
 // Dependencies
-import { localeActions } from '@/handlers/language'
-import { run } from '@grammyjs/runner'
-import { sendLanguage, setLanguage } from '@/handlers/language'
-import attachUser from '@/middlewares/attachUser'
-import bot from '@/helpers/bot'
-import configureI18n from '@/middlewares/configureI18n'
-import i18n from '@/helpers/i18n'
-import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
-import sequentialize from '@/middlewares/sequentialize'
-import startMongo from '@/helpers/startMongo'
-import sendMenu from '@/handlers/handleMenu'
+import { State } from '@/models/User'
+import {
+  handlePaginationNext,
+  handlePaginationPrev,
+} from '@/handlers/handlePagination'
 import {
   handlePlaylistAddAwaitingName,
   handlePlaylistAddReceivedName,
@@ -24,7 +18,16 @@ import {
   handlePlaylistDeleteAwaitingConfirmation,
   handlePlaylistDeleteReceivedReply,
 } from '@/handlers/handlePlaylistDelete'
-import handlePlaylistBack from '@/handlers/handlePlaylistBack'
+import { handlePlaylistLoad } from '@/handlers/handlePlaylistLoad'
+import {
+  handlePlaylistRenameAwaitingRename,
+  handlePlaylistRenameReceivedReply,
+} from '@/handlers/handlePlaylistRename'
+import { localeActions } from '@/handlers/language'
+import {
+  mainMenuLanguageSelectText,
+  mainMenuLanguageText,
+} from '@/helpers/serviceTexts'
 import {
   mainMenuNewPlaylistText,
   mainMenuPrevPageText,
@@ -32,29 +35,26 @@ import {
   playlistMenuConfirmDeleteText,
   playlistMenuRenameText,
 } from '@/helpers/serviceTexts'
-import removeUserInput from '@/helpers/removeUserInput'
-import {
-  handlePaginationNext,
-  handlePaginationPrev,
-} from '@/handlers/handlePagination'
 import {
   mainMenuNextPageText,
   playlistMenuDeleteText,
 } from '@/helpers/serviceTexts'
-import { handlePlaylistLoad } from '@/handlers/handlePlaylistLoad'
-import { requireState } from '@/helpers/requireState'
-import { State } from '@/models/User'
-import {
-  handlePlaylistRenameAwaitingRename,
-  handlePlaylistRenameReceivedReply,
-} from '@/handlers/handlePlaylistRename'
-import { handleAddAudio } from '@/handlers/handleAudioAdd'
-import { handleDeleteAudio } from '@/handlers/handleAudioDelete'
-import {
-  mainMenuLanguageText,
-  mainMenuLanguageSelectText,
-} from '@/helpers/serviceTexts'
+import { run } from '@grammyjs/runner'
+import { sendLanguage, setLanguage } from '@/handlers/language'
+import attachUser from '@/middlewares/attachUser'
 import blockIfPublic from '@/helpers/blockIfPublic'
+import bot from '@/helpers/bot'
+import configureI18n from '@/middlewares/configureI18n'
+import handleAddAudio from '@/handlers/handleAudioAdd'
+import handleDeleteAudio from '@/handlers/handleAudioDelete'
+import handlePlaylistBack from '@/handlers/handlePlaylistBack'
+import i18n from '@/helpers/i18n'
+import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
+import removeUserInput from '@/helpers/removeUserInput'
+import requireState from '@/helpers/requireState'
+import sendMenu from '@/handlers/handleMenu'
+import sequentialize from '@/middlewares/sequentialize'
+import startMongo from '@/helpers/startMongo'
 
 async function runApp() {
   console.log('Starting app...')

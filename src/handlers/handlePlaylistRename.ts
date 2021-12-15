@@ -1,8 +1,8 @@
-import Context from '@/models/Context'
+import { Keyboard, NextFunction } from 'grammy'
 import { State } from '@/models/User'
 import { loadPlaylistMenu } from '@/handlers/handlePlaylistLoad'
-import { Keyboard, NextFunction } from 'grammy'
 import { menuCancelText, serviceText } from '@/helpers/serviceTexts'
+import Context from '@/models/Context'
 
 export async function handlePlaylistRenameAwaitingRename(ctx: Context) {
   ctx.dbuser.state = State.AwaitingPlaylistRename

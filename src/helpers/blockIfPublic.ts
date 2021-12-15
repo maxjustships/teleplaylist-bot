@@ -1,7 +1,7 @@
-import Context from '@/models/Context'
 import { NextFunction } from 'grammy'
+import Context from '@/models/Context'
 
-export default async function blockIfPublic(ctx: Context, next: NextFunction) {
+export default function blockIfPublic(ctx: Context, next: NextFunction) {
   if (ctx.chat.type !== 'private') {
     return
   }

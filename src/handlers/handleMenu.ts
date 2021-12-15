@@ -1,6 +1,6 @@
-import Context from '@/models/Context'
-import { State } from '@/models/User'
 import { Keyboard } from 'grammy'
+import { State } from '@/models/User'
+import Context from '@/models/Context'
 
 const PLAYLIST_PER_PAGE = 3
 
@@ -49,7 +49,7 @@ function getMainKeyboard(ctx: Context, maxPage: number): Keyboard {
     keyboard.text(ctx.dbuser.playlists[i].name).row()
   }
 
-  for (let serviceButton of getMainKeyboardButtons(ctx, maxPage)) {
+  for (const serviceButton of getMainKeyboardButtons(ctx, maxPage)) {
     keyboard.text(serviceButton)
   }
 
