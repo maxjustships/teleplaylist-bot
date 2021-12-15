@@ -28,7 +28,7 @@ playlist_menu: |
   ‼️ If you go back to main menu, your tracks will dissappear, but don't worry, they will return when you pick this playlist again! 👌
 playlist_menu_rename: 🔄 Rename playlist
 playlist_menu_delete: ❌ Delete playlist
-playlist_menu_back: 🔙 Main menu
+playlist_menu_back: ◀️ Main menu
 playlist_rename_prompt: ❓ Enter new name for the playlist "${playlistName}"
 playlist_rename_error_exists: 😕 You already have a playlist with this name. Try another.
 playlist_menu_delete_prompt: ❓ Are you sure you want to delete the "${playlistName}" playlist?
