@@ -6,6 +6,7 @@ main_menu: |
   🎵 Amount of playlists: ${playlistAmount}.
 
   ${mainInfo}
+  This bot speaks english. You can change the language below.
 
   To show this menu again if you delete it, just type in /start
 main_menu_info_empty: 🤔 To start using the bot just add a playlist by clicking the option in the menu below.
@@ -35,3 +36,4 @@ playlist_menu_delete_prompt: ❓ Are you sure you want to delete the "${playlist
 playlist_menu_confirm_delete: ✅ Yes, delete playlist
 keyboard_cancel: ❎ Cancel
 audio_delete: 🗑️ Delete audio
+loading: ⏳ Loading...

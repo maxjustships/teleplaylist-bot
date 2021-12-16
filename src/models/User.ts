@@ -44,6 +44,9 @@ export class User extends FindOrCreate {
 
   @prop({ default: 0 })
   selectedPage: number
+
+  @prop({ default: [] })
+  lastBotMessages: number[]
 }
 
 const UserModel = getModelForClass(User, {

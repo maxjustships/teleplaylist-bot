@@ -1,6 +1,7 @@
 import { Keyboard } from 'grammy'
 import { State } from '@/models/User'
 import Context from '@/models/Context'
+import deleteLastMessages from '@/helpers/deleteLastMessages'
 
 const PLAYLIST_PER_PAGE = 3
 
@@ -17,9 +18,7 @@ export default async function sendMenu(ctx: Context) {
     ctx.dbuser.selectedPage = 0
   }
 
-  await ctx.dbuser.save()
-
-  return ctx.reply(
+  const { message_id } = await ctx.reply(
     ctx.i18n.t('main_menu', {
       playlistAmount,
       plural: playlistAmount === 1 ? '' : 's',
@@ -32,6 +31,11 @@ export default async function sendMenu(ctx: Context) {
       reply_markup: getMainKeyboard(ctx, maxPage),
     }
   )
+
+  await deleteLastMessages(ctx)
+  ctx.dbuser.lastBotMessages.push(message_id)
+
+  await ctx.dbuser.save()
 }
 
 function getMainKeyboard(ctx: Context, maxPage: number): Keyboard {

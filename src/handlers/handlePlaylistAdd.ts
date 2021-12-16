@@ -6,10 +6,16 @@ import sendMenu from '@/handlers/handleMenu'
 
 export async function handlePlaylistAddAwaitingName(ctx: Context) {
   ctx.dbuser.state = State.AwaitingName
-  await ctx.dbuser.save()
-  return ctx.reply(ctx.i18n.t('playlist_add_name_prompt'), {
-    reply_markup: new Keyboard().text(ctx.i18n.t('keyboard_cancel')),
-  })
+
+  const { message_id } = await ctx.reply(
+    ctx.i18n.t('playlist_add_name_prompt'),
+    {
+      reply_markup: new Keyboard().text(ctx.i18n.t('keyboard_cancel')),
+    }
+  )
+  ctx.dbuser.lastBotMessages.push(message_id)
+
+  return ctx.dbuser.save()
 }
 
 export async function handlePlaylistAddReceivedName(
@@ -27,16 +33,24 @@ export async function handlePlaylistAddReceivedName(
   }
 
   if (ctx.dbuser.playlists.some((playlist) => playlist.name === text)) {
-    return ctx.reply(ctx.i18n.t('playlist_add_name_error_exists'))
+    const { message_id } = await ctx.reply(
+      ctx.i18n.t('playlist_add_name_error_exists')
+    )
+    ctx.dbuser.lastBotMessages.push(message_id)
+    return ctx.dbuser.save()
   }
 
   if (serviceText.includes(text)) {
-    return ctx.reply(ctx.i18n.t('playlist_add_name_error_service'))
+    const { message_id } = await ctx.reply(
+      ctx.i18n.t('playlist_add_name_error_service')
+    )
+    ctx.dbuser.lastBotMessages.push(message_id)
+    return ctx.dbuser.save()
   }
 
   const playlist = new Playlist()
   playlist.name = text
   ctx.dbuser.playlists.push(playlist)
-  await ctx.dbuser.save()
+
   return sendMenu(ctx)
 }

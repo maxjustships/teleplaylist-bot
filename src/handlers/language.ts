@@ -19,22 +19,26 @@ const nameToCode = Object.fromEntries(
 
 export async function sendLanguage(ctx: Context) {
   ctx.dbuser.state = State.AwaitingLanguage
-  await ctx.dbuser.save()
-  return ctx.reply(ctx.i18n.t('language'), {
+
+  const { message_id } = await ctx.reply(ctx.i18n.t('language'), {
     reply_markup: languageKeyboard(),
   })
+
+  ctx.dbuser.lastBotMessages.push(message_id)
+
+  await ctx.dbuser.save()
 }
 
 export async function setLanguage(ctx: Context) {
   if (!(ctx.msg.text in nameToCode)) {
-    return ctx.reply(ctx.i18n.t('language_select_error'))
+    const { message_id } = await ctx.reply(ctx.i18n.t('language_select_error'))
+    ctx.dbuser.lastBotMessages.push(message_id)
+    return ctx.dbuser.save()
   }
 
   ctx.dbuser.language = nameToCode[ctx.msg.text]
   ctx.i18n.locale(nameToCode[ctx.msg.text])
-  await ctx.reply(ctx.i18n.t('language_selected'), {
-    parse_mode: 'HTML',
-  })
+
   return sendMenu(ctx)
 }
 
@@ -44,7 +48,6 @@ function languageKeyboard() {
   const locales = localesFiles()
   const keyboard = new Keyboard()
   locales.forEach((locale, index) => {
-    const localeCode = locale.split('.')[0]
     const localeName = load(
       readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8')
     ).name as string

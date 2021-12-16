@@ -30,8 +30,10 @@ export const playlistMenuConfirmDeleteText = getLocaleValuesForKey(
   'playlist_menu_confirm_delete'
 )
 export const menuCancelText = getLocaleValuesForKey('keyboard_cancel')
+export const loadingText = getLocaleValuesForKey('loading')
 
 export const serviceText = [
+  loadingText,
   mainMenuNewPlaylistText,
   mainMenuPrevPageText,
   mainMenuNextPageText,

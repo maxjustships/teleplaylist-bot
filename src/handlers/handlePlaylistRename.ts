@@ -6,9 +6,8 @@ import Context from '@/models/Context'
 
 export async function handlePlaylistRenameAwaitingRename(ctx: Context) {
   ctx.dbuser.state = State.AwaitingPlaylistRename
-  await ctx.dbuser.save()
 
-  return ctx.reply(
+  const { message_id } = await ctx.reply(
     ctx.i18n.t('playlist_rename_prompt', {
       playlistName: ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name,
     }),
@@ -16,6 +15,9 @@ export async function handlePlaylistRenameAwaitingRename(ctx: Context) {
       reply_markup: new Keyboard().text(ctx.i18n.t('keyboard_cancel')),
     }
   )
+  ctx.dbuser.lastBotMessages.push(message_id)
+
+  return ctx.dbuser.save()
 }
 
 export async function handlePlaylistRenameReceivedReply(
@@ -31,7 +33,11 @@ export async function handlePlaylistRenameReceivedReply(
   }
 
   if (serviceText.includes(ctx.msg.text)) {
-    return ctx.reply(ctx.i18n.t('playlist_add_name_error_service'))
+    const { message_id } = await ctx.reply(
+      ctx.i18n.t('playlist_add_name_error_service')
+    )
+    ctx.dbuser.lastBotMessages.push(message_id)
+    return ctx.dbuser.save()
   }
 
   if (
@@ -40,7 +46,11 @@ export async function handlePlaylistRenameReceivedReply(
         ctx.dbuser.selectedPlaylist !== index && playlist.name === ctx.msg.text
     )
   ) {
-    return ctx.reply(ctx.i18n.t('playlist_rename_error_exists'))
+    const { message_id } = await ctx.reply(
+      ctx.i18n.t('playlist_rename_error_exists')
+    )
+    ctx.dbuser.lastBotMessages.push(message_id)
+    return ctx.dbuser.save()
   }
 
   ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name = ctx.msg.text

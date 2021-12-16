@@ -1,6 +1,8 @@
 import { Keyboard, NextFunction } from 'grammy'
 import { State } from '@/models/User'
 import Context from '@/models/Context'
+import deleteLastMessages from '@/helpers/deleteLastMessages'
+import getLoadingKeyboard from '@/helpers/loadingKeyboard'
 import sendAudio from '@/handlers/sendAudio'
 
 export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
@@ -21,8 +23,9 @@ export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
   }
 
   ctx.dbuser.selectedPlaylist = playlistIndex
-  await loadPlaylistMenu(ctx)
-  return loadPlaylistAudio(ctx)
+
+  await loadPlaylistAudio(ctx)
+  return loadPlaylistMenu(ctx)
 }
 
 export async function loadPlaylistMenu(ctx: Context) {
@@ -39,7 +42,7 @@ export async function loadPlaylistMenu(ctx: Context) {
     .text(ctx.i18n.t('playlist_menu_back'))
     .row()
 
-  return ctx.reply(
+  const { message_id } = await ctx.reply(
     ctx.i18n.t('playlist_menu', {
       playlistName: ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name,
     }),
@@ -47,9 +50,17 @@ export async function loadPlaylistMenu(ctx: Context) {
       reply_markup: keyboard,
     }
   )
+  await deleteLastMessages(ctx)
+  ctx.dbuser.lastBotMessages.push(message_id)
+  return ctx.dbuser.save()
 }
 
 export async function loadPlaylistAudio(ctx: Context) {
+  const { message_id } = await ctx.reply(ctx.i18n.t('loading'), {
+    reply_markup: getLoadingKeyboard(ctx),
+  })
+  ctx.dbuser.lastBotMessages.push(message_id)
+
   for (
     let i = 0;
     i < ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio.length;

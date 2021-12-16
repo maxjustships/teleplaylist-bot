@@ -8,9 +8,8 @@ import sendMenu from '@/handlers/handleMenu'
 
 export async function handlePlaylistDeleteAwaitingConfirmation(ctx: Context) {
   ctx.dbuser.state = State.AwaitingPlaylistDeletion
-  await ctx.dbuser.save()
 
-  return ctx.reply(
+  const { message_id } = await ctx.reply(
     ctx.i18n.t('playlist_menu_delete_prompt', {
       playlistName: ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name,
     }),
@@ -18,6 +17,9 @@ export async function handlePlaylistDeleteAwaitingConfirmation(ctx: Context) {
       reply_markup: getConfirmKeyboard(ctx),
     }
   )
+  ctx.dbuser.lastBotMessages.push(message_id)
+
+  await ctx.dbuser.save()
 }
 
 function getConfirmKeyboard(ctx: Context): Keyboard {
