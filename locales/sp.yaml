@@ -1,0 +1,39 @@
+name: Español
+language: Por favor, selecciona el idioma.
+language_selected: <b>Este bot</b> ahora habla español.
+language_select_error: Por favor, elige el idioma correcto.
+main_menu: |
+  🎵 Cantidad de listas de reproducción: ${playlistAmount}.
+
+  ${mainInfo}
+  Este bot habla inglés. Puedes cambiar el idioma a continuación.
+
+  Para mostrar este menú de nuevo si lo eliminas, solo escribe /start
+main_menu_info_empty: 🤔 Para empezar a usar el bot, solo agrega una lista de reproducción haciendo clic en la opción del menú a continuación.
+main_menu_info: 🎶 Para administrar una lista de reproducción, simplemente selecciónala del menú a continuación. También puedes agregar una nueva desde allí.
+main_menu_keyboard_left: ⬅️
+main_menu_keyboard_right: ➡️
+main_menu_keyboard_add: 🆕 Nueva lista de reproducción
+main_menu_keyboard_language: 🌐 Idioma 🌐
+playlist_add_name_prompt: ❓ Ingresa el nombre de la nueva lista de reproducción.
+playlist_add_name_error_exists: 😕 Ya tienes una lista de reproducción con este nombre. Por favor, prueba con otro nombre.
+playlist_add_name_error_service: 😕 No puedes usar palabras de servicio para nombrar tu lista de reproducción. Por favor, intenta con otro nombre.
+main_menu_select_error: 🤔 No hay una lista de reproducción con el nombre "${playlistName}"
+playlist_menu: |
+  La lista de reproducción "${playlistName}" está seleccionada.
+
+  Para agregar audios a la lista de reproducción simplemente cárgalos o reenvía mensajes con tus archivos aquí.
+  Haz clic en "Eliminar audio" debajo de cada uno de los audios para eliminarlos de la lista de reproducción.
+
+  Puedes renombrar o eliminar la lista de reproducción en el menú a continuación.
+  ‼️ Si vuelves al menú principal, tus pistas desaparecerán, pero no te preocupes, ¡volverán cuando selecciones esta lista de reproducción de nuevo! 👌
+playlist_menu_rename: 🔄 Renombrar lista de reproducción
+playlist_menu_delete: ❌ Eliminar lista de reproducción
+playlist_menu_back: ◀️ Menú principal
+playlist_rename_prompt: ❓ Ingresa un nuevo nombre para la lista de reproducción "${playlistName}"
+playlist_rename_error_exists: 😕 Ya tienes una lista de reproducción con este nombre. Intenta con otro.
+playlist_menu_delete_prompt: ❓ ¿Estás seguro de que deseas eliminar la lista de reproducción "${playlistName}"?
+playlist_menu_confirm_delete: ✅ Sí, eliminar lista de reproducción
+keyboard_cancel: ❎ Cancelar
+audio_delete: 🗑️ Eliminar audio
+loading: ⏳ Cargando...
