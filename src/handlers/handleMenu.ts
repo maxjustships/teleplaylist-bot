@@ -18,6 +18,14 @@ export default async function sendMenu(ctx: Context) {
     ctx.dbuser.selectedPage = 0
   }
 
+  const shouldShowDonationLink =
+    Math.random() < Number(process.env.DONATION_FREQUENCY)
+  const donationInfo = shouldShowDonationLink
+    ? ctx.i18n.t('donation_info', {
+        donationLink: process.env.DONATION_LINK,
+      })
+    : ''
+
   const { message_id } = await ctx.reply(
     ctx.i18n.t('main_menu', {
       playlistAmount,
@@ -26,9 +34,12 @@ export default async function sendMenu(ctx: Context) {
         playlistAmount === 0
           ? ctx.i18n.t('main_menu_info_empty')
           : ctx.i18n.t('main_menu_info'),
+      donationInfo,
     }),
     {
       reply_markup: getMainKeyboard(ctx, maxPage),
+      parse_mode: 'HTML',
+      disable_web_page_preview: true,
     }
   )
 

@@ -9,6 +9,8 @@ main_menu: |
   This bot speaks english. You can change the language below.
 
   To show this menu again if you delete it, just type in /start
+
+  ${donationInfo}
 main_menu_info_empty: 🤔 To start using the bot just add a playlist by clicking the option in the menu below.
 main_menu_info: 🎶 To manage a playlist just select it from the menu below. You can add a new one from there as well.
 main_menu_keyboard_left: ⬅️
@@ -37,3 +39,4 @@ playlist_menu_confirm_delete: ✅ Yes, delete playlist
 keyboard_cancel: ❎ Cancel
 audio_delete: 🗑️ Delete audio
 loading: ⏳ Loading...
+donation_info: This bot is free and has no annoying ads. If you like it, concider making <a href="${donationLink}">a small donation</a> to help cover the server costs. Thank you!
