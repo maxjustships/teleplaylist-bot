@@ -1,0 +1,41 @@
+name: Français
+language: S'il vous plaît, sélectionnez la langue.
+language_select_error: Veuillez choisir la langue correcte.
+main_menu: |
+  🎵 Nombre de listes de lecture : ${playlistAmount}.
+
+  ${mainInfo}
+  Ce bot parle français. Vous pouvez changer de langue ci-dessous.
+
+  Pour afficher ce menu à nouveau si vous le supprimez, tapez simplement /start
+
+  ${donationInfo}
+main_menu_info_empty: 🤔 Pour commencer à utiliser le bot, ajoutez simplement une liste de lecture en cliquant sur l'option dans le menu ci-dessous.
+main_menu_info: 🎶 Pour gérer une liste de lecture, sélectionnez-la simplement dans le menu ci-dessous. Vous pouvez en ajouter une nouvelle à partir de là également.
+main_menu_keyboard_left: ⬅️
+main_menu_keyboard_right: ➡️
+main_menu_keyboard_add: 🆕 Nouvelle liste de lecture
+main_menu_keyboard_language: 🌐 Langue 🌐
+playlist_add_name_prompt: ❓ Entrez le nom de la nouvelle liste de lecture.
+playlist_add_name_error_exists: 😕 Vous avez déjà une liste de lecture avec ce nom. Veuillez en essayer un autre.
+playlist_add_name_error_service: 😕 Vous ne pouvez pas utiliser de mots de service pour nommer votre liste de lecture. Veuillez en essayer un autre.
+main_menu_select_error: 🤔 Aucune liste de lecture avec le nom "${playlistName}" spécifié
+playlist_menu: |
+  La liste de lecture "${playlistName}" est sélectionnée.
+
+  Pour ajouter des audios à la liste de lecture, téléchargez-les simplement ou transférez des messages avec vos fichiers ici.
+  Cliquez sur "Supprimer l'audio" sous chacun des audios pour les supprimer de la liste de lecture.
+
+  Vous pouvez renommer ou supprimer la liste de lecture dans le menu ci-dessous.
+  ‼️ Si vous retournez au menu principal, vos morceaux disparaîtront, mais ne vous inquiétez pas, ils reviendront lorsque vous choisirez à nouveau cette liste de lecture ! 👌
+playlist_menu_rename: 🔄 Renommer la liste de lecture
+playlist_menu_delete: ❌ Supprimer la liste de lecture
+playlist_menu_back: ◀️ Menu principal
+playlist_rename_prompt: ❓ Entrez le nouveau nom pour la liste de lecture "${playlistName}"
+playlist_rename_error_exists: 😕 Vous avez déjà une liste de lecture avec ce nom. Essayez un autre nom.
+playlist_menu_delete_prompt: ❓ Êtes-vous sûr de vouloir supprimer la liste de lecture "${playlistName}" ?
+playlist_menu_confirm_delete: ✅ Oui, supprimer la liste de lecture
+keyboard_cancel: ❎ Annuler
+audio_delete: 🗑️ Supprimer l'audio
+loading: ⏳ Chargement...
+donation_info: Ce bot est gratuit et n'a pas de publicités ennuyeuses. Si vous l'aimez, envisagez de faire <a href="${donationLink}">un petit don</a> pour aider à couvrir les coûts du serveur. Merci!

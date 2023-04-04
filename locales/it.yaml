@@ -1,0 +1,41 @@
+name: Italiano
+language: Scegli la lingua.
+language_select_error: Scegli la lingua corretta.
+main_menu: |
+  🎵 Numero di playlist: ${playlistAmount}.
+
+  ${mainInfo}
+  Questo bot parla italiano. Puoi cambiare lingua qui sotto.
+
+  Se hai eliminato questo menu, per mostrarlo di nuovo, digita /start.
+
+  ${donationInfo}
+main_menu_info_empty: 🤔 Per iniziare ad usare il bot, aggiungi una playlist cliccando l'opzione nel menu qui sotto.
+main_menu_info: 🎶 Per gestire una playlist, selezionala dal menu qui sotto. Puoi anche aggiungerne una nuova da lì.
+main_menu_keyboard_left: ⬅️
+main_menu_keyboard_right: ➡️
+main_menu_keyboard_add: 🆕 Nuova playlist
+main_menu_keyboard_language: 🌐 Lingua 🌐
+playlist_add_name_prompt: ❓ Inserisci il nome della nuova playlist.
+playlist_add_name_error_exists: 😕 Hai già una playlist con questo nome. Per favore, prova con un altro nome.
+playlist_add_name_error_service: 😕 Non puoi usare parole di servizio per il nome della playlist. Per favore, prova con un altro nome.
+main_menu_select_error: 🤔 Nessuna playlist con il nome specificato "${playlistName}"
+playlist_menu: |
+  Playlist "${playlistName}" selezionata.
+
+  Per aggiungere audio alla playlist, caricali o inoltra i messaggi contenenti i file qui.
+  Clicca su "Elimina audio" sotto ciascuno degli audio per rimuoverli dalla playlist.
+
+  Puoi rinominare o eliminare la playlist dal menu qui sotto.
+  ‼️ Se torni al menu principale, i tuoi brani scompariranno, ma non preoccuparti, torneranno quando selezioni di nuovo questa playlist! 👌
+playlist_menu_rename: 🔄 Rinomina playlist
+playlist_menu_delete: ❌ Elimina playlist
+playlist_menu_back: ◀️ Menu principale
+playlist_rename_prompt: ❓ Inserisci il nuovo nome per la playlist "${playlistName}"
+playlist_rename_error_exists: 😕 Hai già una playlist con questo nome. Prova con un altro.
+playlist_menu_delete_prompt: ❓ Sei sicuro di voler eliminare la playlist "${playlistName}"?
+playlist_menu_confirm_delete: ✅ Sì, elimina playlist
+keyboard_cancel: ❎ Annulla
+audio_delete: 🗑️ Elimina audio
+loading: ⏳ Caricamento...
+donation_info: Questo bot è gratuito e non ha annunci fastidiosi. Se ti piace, considera di fare <a href="${donationLink}">una piccola donazione</a> per aiutare a coprire i costi del server. Grazie!
