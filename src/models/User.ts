@@ -47,9 +47,12 @@ export class User extends FindOrCreate {
 
   @prop({ default: [] })
   lastBotMessages: number[]
+
+  @prop({ default: Number(new Date()) })
+  lastPlaylistActiveTimestamp: number
 }
 
-const UserModel = getModelForClass(User, {
+export const UserModel = getModelForClass(User, {
   schemaOptions: { timestamps: true },
 })
 

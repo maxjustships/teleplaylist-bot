@@ -50,11 +50,14 @@ import handleDeleteAudio from '@/handlers/handleAudioDelete'
 import handlePlaylistBack from '@/handlers/handlePlaylistBack'
 import i18n from '@/helpers/i18n'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
+import removeStalePlaylists from '@/helpers/removeStalePlaylist'
 import removeUserInput from '@/helpers/removeUserInput'
 import requireState from '@/helpers/requireState'
 import sendMenu from '@/handlers/handleMenu'
 import sequentialize from '@/middlewares/sequentialize'
 import startMongo from '@/helpers/startMongo'
+
+const STALE_PLAYLIST_DELETION_RATE = 60 * 60 * 1000 // 1 hour
 
 async function runApp() {
   console.log('Starting app...')
@@ -119,6 +122,9 @@ async function runApp() {
   bot.on('message:text', handlePlaylistLoad)
   bot.on('message:text', handlePlaylistRenameReceivedReply)
   bot.on('message:text', handlePlaylistDeleteReceivedReply)
+
+  // autodelete users with playlists open too long
+  setInterval(removeStalePlaylists(), STALE_PLAYLIST_DELETION_RATE)
 
   // Actions
   bot.callbackQuery(localeActions, setLanguage)

@@ -23,6 +23,7 @@ export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
   }
 
   ctx.dbuser.selectedPlaylist = playlistIndex
+  ctx.dbuser.lastPlaylistActiveTimestamp = Date.now()
 
   await loadPlaylistAudio(ctx)
   return loadPlaylistMenu(ctx)
