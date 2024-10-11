@@ -36,7 +36,7 @@ docker compose up --watch --build
 
 ```
 docker compose -f compose.yaml -f compose.production.yaml build
-docker compose up
+docker compose up -d
 ```
 
 ## Stack
