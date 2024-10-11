@@ -39,6 +39,21 @@ docker compose -f compose.yaml -f compose.production.yaml build
 docker compose up -d
 ```
 
+## Auto deploy
+
+Specify secrets in your repository:
+
+- SSH_HOST: host to deploy on
+- SSH_USER: your ssh user on that host
+- SSH_PRIVATE_KEY: private key to auth with. Make sure to add it into `authorized_keys` on the host!
+- PROJECT_PATH: path to your project on host. Prefer absolute paths
+
+Have repository cloned on your host.
+
+It should auto re-deploy on each push to main.
+
+Look into `.github/workflows/deploy.yml` for more details.
+
 ## Stack
 
 - MongoDB
