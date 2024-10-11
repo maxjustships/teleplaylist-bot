@@ -2,6 +2,44 @@
 
 A simple bot that helps to organize your Telegram audios into convenient playlists.
 
+## Running
+
+Runs with docker.
+
+1. Ensure Docker Engine is installed on your machine (with Docker Desktop or just a server)
+2. Make sure you have mongodb container with mongo image running on your host in mongodb network
+
+You can create one with:
+
+```
+docker run -d \
+--name mongodb \
+--mount type=volume,src=mongodb,dst=/data/db \
+--mount type=volume,src=mongodb-config,dst=/data/configdb \
+--restart unless-stopped \
+-p 127.0.0.1:27017:27017 \
+--network mongodb \
+mongo:8.0-noble # or any other tag
+```
+
+1. Configure user and password for this app in your DB
+2. Configure .env (see .env.sample)
+3. Run commands
+
+### Develop
+
+```
+docker compose up --watch --build
+```
+
+### Publish for production
+
+```
+docker compose -f compose.yaml -f compose.production.yaml up
+```
+
+Add `--build` flag if necessary.
+
 ## Stack
 
 - MongoDB

@@ -1,9 +1,9 @@
-import { Keyboard } from 'grammy'
-import { State } from '@/models/User'
-import { load } from 'js-yaml'
-import { readFileSync, readdirSync } from 'fs'
-import Context from '@/models/Context'
 import sendMenu from '@/handlers/handleMenu'
+import Context from '@/models/Context'
+import { State } from '@/models/User'
+import { readFileSync, readdirSync } from 'fs'
+import { Keyboard } from 'grammy'
+import { load } from 'js-yaml'
 
 export const localeActions = localesFiles().map((file) => file.split('.')[0])
 const nameToCode = Object.fromEntries(

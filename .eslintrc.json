@@ -9,12 +9,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "prettier",
-    "sort-imports-es6-autofix",
-    "import"
-  ],
+  "plugins": ["@typescript-eslint", "prettier", "import"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -36,14 +31,7 @@
         "endOfLine": "auto"
       }
     ],
-    "sort-imports-es6-autofix/sort-imports-es6": [
-      2,
-      {
-        "ignoreCase": false,
-        "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
-      }
-    ],
+
     "import/prefer-default-export": "error"
   }
 }
