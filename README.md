@@ -22,11 +22,11 @@ docker run -d \
 mongo:8.0-noble # or any other tag
 ```
 
-1. Configure user and password for this app in your DB
-2. Configure .env (see .env.sample)
-3. Run commands
+3. Configure user and password for this app in your DB
+4. Configure .env (see .env.sample)
+5. Run commands
 
-### Develop
+### Development
 
 ```
 docker compose up --watch --build
@@ -35,10 +35,9 @@ docker compose up --watch --build
 ### Publish for production
 
 ```
-docker compose -f compose.yaml -f compose.production.yaml up
+docker compose -f compose.yaml -f compose.production.yaml build
+docker compose up
 ```
-
-Add `--build` flag if necessary.
 
 ## Stack
 
