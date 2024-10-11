@@ -2,7 +2,7 @@ name: English
 language: Please, select the language.
 language_select_error: Please, choose the correct language.
 main_menu: |
-  🎵 Amount of playlists: ${playlistAmount}.
+  🎵🎵🎵  Amount of playlists: ${playlistAmount}.
 
   ${mainInfo}
   This bot speaks english. You can change the language below.

@@ -1,11 +1,10 @@
 import 'reflect-metadata'
 // Setup @/ aliases for modules
 import 'module-alias/register'
-// Config dotenv
-import * as dotenv from 'dotenv'
-dotenv.config({ path: `${__dirname}/../.env` })
 // Dependencies
-import { State } from '@/models/User'
+import handleAddAudio from '@/handlers/handleAudioAdd'
+import handleDeleteAudio from '@/handlers/handleAudioDelete'
+import sendMenu from '@/handlers/handleMenu'
 import {
   handlePaginationNext,
   handlePaginationPrev,
@@ -14,6 +13,7 @@ import {
   handlePlaylistAddAwaitingName,
   handlePlaylistAddReceivedName,
 } from '@/handlers/handlePlaylistAdd'
+import handlePlaylistBack from '@/handlers/handlePlaylistBack'
 import {
   handlePlaylistDeleteAwaitingConfirmation,
   handlePlaylistDeleteReceivedReply,
@@ -23,44 +23,36 @@ import {
   handlePlaylistRenameAwaitingRename,
   handlePlaylistRenameReceivedReply,
 } from '@/handlers/handlePlaylistRename'
-import { localeActions } from '@/handlers/language'
-import {
-  mainMenuLanguageSelectText,
-  mainMenuLanguageText,
-} from '@/helpers/serviceTexts'
-import {
-  mainMenuNewPlaylistText,
-  mainMenuPrevPageText,
-  playlistMenuBackText,
-  playlistMenuConfirmDeleteText,
-  playlistMenuRenameText,
-} from '@/helpers/serviceTexts'
-import {
-  mainMenuNextPageText,
-  playlistMenuDeleteText,
-} from '@/helpers/serviceTexts'
-import { run } from '@grammyjs/runner'
-import { sendLanguage, setLanguage } from '@/handlers/language'
-import attachUser from '@/middlewares/attachUser'
+import { localeActions, sendLanguage, setLanguage } from '@/handlers/language'
 import blockIfPublic from '@/helpers/blockIfPublic'
 import bot from '@/helpers/bot'
-import configureI18n from '@/middlewares/configureI18n'
-import handleAddAudio from '@/handlers/handleAudioAdd'
-import handleDeleteAudio from '@/handlers/handleAudioDelete'
-import handlePlaylistBack from '@/handlers/handlePlaylistBack'
 import i18n from '@/helpers/i18n'
-import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import removeStalePlaylists from '@/helpers/removeStalePlaylist'
 import removeUserInput from '@/helpers/removeUserInput'
 import requireState from '@/helpers/requireState'
-import sendMenu from '@/handlers/handleMenu'
-import sequentialize from '@/middlewares/sequentialize'
+import {
+  mainMenuLanguageSelectText,
+  mainMenuLanguageText,
+  mainMenuNewPlaylistText,
+  mainMenuNextPageText,
+  mainMenuPrevPageText,
+  playlistMenuBackText,
+  playlistMenuConfirmDeleteText,
+  playlistMenuDeleteText,
+  playlistMenuRenameText,
+} from '@/helpers/serviceTexts'
 import startMongo from '@/helpers/startMongo'
+import attachUser from '@/middlewares/attachUser'
+import configureI18n from '@/middlewares/configureI18n'
+import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
+import sequentialize from '@/middlewares/sequentialize'
+import { State } from '@/models/User'
+import { run } from '@grammyjs/runner'
 
 const STALE_PLAYLIST_DELETION_RATE = 60 * 60 * 1000 // 1 hour
 
 async function runApp() {
-  console.log('Starting app...')
+  console.log('Starting app!')
   // Mongo
   await startMongo()
   console.log('Mongo connected')
