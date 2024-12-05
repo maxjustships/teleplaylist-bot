@@ -9,3 +9,5 @@ RUN --mount=type=cache,target=/root/.yarn \
     yarn install --frozen-lockfile
 
 COPY . .
+
+CMD yarn distribute
