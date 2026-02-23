@@ -22,6 +22,7 @@ interface Context extends BaseContext {
   db: DrizzleD1Database<typeof schema>
   env: Env
   t: (id: string, args?: any) => string
+  useLocale: (locale: string) => Promise<void>
 }
 
 export default Context
