@@ -7,6 +7,7 @@ export default async function handleAddAudio(ctx: Context) {
 
   if (!ctx.dbuser.selectedPlaylistId) return
 
+  await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id).catch(() => {})
   const audioMessage = await sendAudio(ctx, fileId)
 
   await ctx.db.insert(schema.audios).values({

@@ -57,6 +57,7 @@ export async function handlePlaylistRenameReceivedReply(
   }
 
   const text = ctx.msg.text.trim()
+  await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id).catch(() => {})
 
   if (serviceText.includes(text)) {
     const errorText = ctx.t('playlist_add_name_error_service')
