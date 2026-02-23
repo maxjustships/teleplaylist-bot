@@ -1,64 +1,37 @@
-# Playlist bot
+# Teleplaylist Bot
 
-A simple bot that helps to organize your Telegram audios into convenient playlists.
+A Telegram bot to organize your audio files into convenient playlists. Built with grammY and deployed on Cloudflare Workers using D1 for database storage.
 
-## Running
+## Features
 
-Runs with docker.
+- **Single Message UI**: Clean chat history using inline keyboards and message editing.
+- **Playlist Management**: Create, rename, and delete playlists easily.
+- **Audio Organization**: Upload or forward audios to playlists.
+- **Multilingual Support**: Available in multiple languages.
+- **Cloudflare Native**: Optimized for Cloudflare Workers and D1.
 
-1. Ensure Docker Engine is installed on your machine (with Docker Desktop or just a server)
-2. Make sure you have mongodb container with mongo image running on your host in mongodb network
+## Quick Start
 
-You can create one with:
+### 1. Prerequisites
+- [Cloudflare Account](https://dash.cloudflare.com)
+- [Node.js](https://nodejs.org/) & `pnpm`
+- Telegram Bot Token from [@BotFather](https://t.me/BotFather)
 
-```
-docker run -d \
---name mongodb \
---mount type=volume,src=mongodb,dst=/data/db \
---mount type=volume,src=mongodb-config,dst=/data/configdb \
---restart unless-stopped \
--p 127.0.0.1:27017:27017 \
---network mongodb \
-mongo:8.0-noble # or any other tag
-```
+### 2. Setup
+Follow the detailed [Setup Guide](SETUP.md) to configure your Cloudflare environment and database.
 
-3. Configure user and password for this app in your DB
-4. Configure .env (see .env.sample)
-5. Run commands
+### 3. Local Development
+For instructions on running the bot locally with a persistent tunnel, check the [Testing Guide](TESTING.md).
 
-### Development
+## Commands
+- `/start`: Open the main menu.
 
-```
-docker compose up --watch --build
-```
+## Tech Stack
+- [grammY](https://grammy.dev/): Telegram Bot Framework.
+- [Cloudflare Workers](https://workers.cloudflare.com/): Serverless execution.
+- [Cloudflare D1](https://developers.cloudflare.com/d1/): SQL database.
+- [Drizzle ORM](https://orm.drizzle.team/): Type-safe database access.
+- [Fluent](https://projectfluent.org/): Localization system.
 
-### Publish for production
-
-```
-docker compose -f compose.yaml -f compose.production.yaml build
-docker compose up -d
-```
-
-## Auto deploy
-
-Specify secrets in your repository:
-
-- SSH_HOST: host to deploy on
-- SSH_USER: your ssh user on that host
-- SSH_PRIVATE_KEY: private key to auth with. Make sure to add it into `authorized_keys` on the host!
-- PROJECT_PATH: path to your project on host. Prefer absolute paths
-
-Have repository cloned on your host.
-
-It should auto re-deploy on each push to main.
-
-Look into `.github/workflows/deploy.yml` for more details.
-
-## Stack
-
-- MongoDB
-- TypeScript
-- GrammY
-- I18n
-
-This bot was made with this starter: https://github.com/Borodutch/telegram-bot-starter
+## License
+MIT
