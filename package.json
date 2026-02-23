@@ -15,7 +15,10 @@
     "db:migrate:remote": "wrangler d1 migrations apply teleplaylist-bot-db --remote",
     "db:studio": "pnpm drizzle-kit studio",
     "pretty": "prettier --check src",
-    "lint": "pnpm pretty && eslint src"
+    "lint": "pnpm pretty && eslint src",
+    "test": "vitest",
+    "tunnel": "cloudflared tunnel --url http://localhost:8787",
+    "set-webhook": "ts-node src/scripts/setWebhook.ts"
   },
   "dependencies": {
     "@fluent/bundle": "^0.19.1",
@@ -29,8 +32,10 @@
     "@types/node": "^25.3.0",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
     "@typescript-eslint/parser": "^8.56.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "better-sqlite3": "^12.6.2",
     "concurrently": "^9.2.1",
+    "dotenv": "^17.3.1",
     "drizzle-kit": "^0.31.9",
     "eslint": "^10.0.1",
     "eslint-config-prettier": "^10.1.8",
@@ -41,6 +46,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0",
+    "vitest": "^4.0.18",
     "wrangler": "^4.67.0"
   }
 }
