@@ -6,6 +6,7 @@ import { DrizzleD1Database } from 'drizzle-orm/d1'
 export interface Env {
   DB: D1Database
   TOKEN: string
+  BOT_INFO?: string
   DONATION_LINK?: string
   DONATION_FREQUENCY?: string
 }
