@@ -1,43 +1,43 @@
 import sendMenu from '@/handlers/handleMenu'
 import Context from '@/models/Context'
-import { State } from '@/models/User'
-import { readFileSync, readdirSync } from 'fs'
+import { State, updateUser } from '@/models/User'
 import { Keyboard } from 'grammy'
-import { load } from 'js-yaml'
+import { locales, nameToCode } from '@/helpers/i18n'
+import * as schema from '@/db/schema'
 
-export const localeActions = localesFiles().map((file) => file.split('.')[0])
-const nameToCode = Object.fromEntries(
-  localesFiles().map((locale) => {
-    const localeCode = locale.split('.')[0]
-    const localeName = load(
-      readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8')
-    ).name as string
-
-    return [localeName, localeCode]
-  })
-)
+export const localeActions = Object.keys(locales)
 
 export async function sendLanguage(ctx: Context) {
-  ctx.dbuser.state = State.AwaitingLanguage
+  await updateUser(ctx.db, ctx.from!.id, { state: State.AwaitingLanguage })
 
-  const { message_id } = await ctx.reply(ctx.i18n.t('language'), {
+  const { message_id } = await ctx.reply(ctx.t('language'), {
     reply_markup: languageKeyboard(),
   })
 
-  ctx.dbuser.lastBotMessages.push(message_id)
-
-  await ctx.dbuser.save()
+  await ctx.db.insert(schema.lastBotMessages).values({
+    userId: ctx.from!.id,
+    messageId: message_id,
+  })
 }
 
 export async function setLanguage(ctx: Context) {
-  if (!(ctx.msg.text in nameToCode)) {
-    const { message_id } = await ctx.reply(ctx.i18n.t('language_select_error'))
-    ctx.dbuser.lastBotMessages.push(message_id)
-    return ctx.dbuser.save()
+  const text = ctx.callbackQuery?.data || ctx.msg?.text
+
+  if (!text) return
+
+  if (!(text in nameToCode) && !(text in locales)) {
+    const { message_id } = await ctx.reply(ctx.t('language_select_error'))
+    await ctx.db.insert(schema.lastBotMessages).values({
+      userId: ctx.from!.id,
+      messageId: message_id,
+    })
+    return
   }
 
-  ctx.dbuser.language = nameToCode[ctx.msg.text]
-  ctx.i18n.locale(nameToCode[ctx.msg.text])
+  const langCode = (nameToCode[text] || text) as string
+
+  await updateUser(ctx.db, ctx.from!.id, { language: langCode })
+  await ctx.useLocale(langCode)
 
   return sendMenu(ctx)
 }
@@ -45,20 +45,15 @@ export async function setLanguage(ctx: Context) {
 const LANGS_PER_ROW = 2
 
 function languageKeyboard() {
-  const locales = localesFiles()
   const keyboard = new Keyboard()
-  locales.forEach((locale, index) => {
-    const localeName = load(
-      readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8')
-    ).name as string
-    keyboard.text(localeName)
-    if (index % LANGS_PER_ROW != 0) {
+  Object.values(locales).forEach((transStr, index) => {
+    // Extract name from Fluent string: "name = English"
+    const nameMatch = transStr.match(/name\s*=\s*(.+)/)
+    const name = nameMatch ? nameMatch[1].trim() : 'Unknown'
+    keyboard.text(name)
+    if ((index + 1) % LANGS_PER_ROW == 0) {
       keyboard.row()
     }
   })
   return keyboard
-}
-
-export function localesFiles() {
-  return readdirSync(`${__dirname}/../../locales`)
 }

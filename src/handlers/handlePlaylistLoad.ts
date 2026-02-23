@@ -1,82 +1,89 @@
 import { Keyboard, NextFunction } from 'grammy'
-import { State } from '@/models/User'
+import { State, updateUser } from '@/models/User'
 import Context from '@/models/Context'
 import deleteLastMessages from '@/helpers/deleteLastMessages'
 import getLoadingKeyboard from '@/helpers/loadingKeyboard'
 import sendAudio from '@/handlers/sendAudio'
+import * as schema from '@/db/schema'
+import { eq } from 'drizzle-orm'
 
 export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
   if (ctx.dbuser.state !== State.MainMenu) {
     return next()
   }
 
-  const playlistIndex = ctx.dbuser.playlists.findIndex(
+  const playlist = ctx.dbuser.playlists.find(
     ({ name }) => name === ctx.msg.text
   )
 
-  if (playlistIndex === -1) {
-    return ctx.reply(
-      ctx.i18n.t('main_menu_select_error', {
-        playlistName: ctx.msg.text,
-      })
-    )
+  if (!playlist) {
+    // If not a playlist name, maybe it's some other message
+    return next()
   }
 
-  ctx.dbuser.selectedPlaylist = playlistIndex
-  ctx.dbuser.lastPlaylistActiveTimestamp = Date.now()
+  await updateUser(ctx.db, ctx.from.id, {
+    selectedPlaylistId: playlist.id,
+    lastPlaylistActiveTimestamp: Date.now(),
+  })
+
+  // Refresh ctx.dbuser manually for subsequent calls in same request
+  ctx.dbuser.selectedPlaylistId = playlist.id
 
   await loadPlaylistAudio(ctx)
   return loadPlaylistMenu(ctx)
 }
 
 export async function loadPlaylistMenu(ctx: Context) {
-  ctx.dbuser.state = State.PlaylistMenu
-  await ctx.dbuser.save()
+  await updateUser(ctx.db, ctx.from.id, { state: State.PlaylistMenu })
 
   const keyboard = new Keyboard()
 
   keyboard
-    .text(ctx.i18n.t('playlist_menu_rename'))
+    .text(ctx.t('playlist_menu_rename'))
     .row()
-    .text(ctx.i18n.t('playlist_menu_delete'))
+    .text(ctx.t('playlist_menu_delete'))
     .row()
-    .text(ctx.i18n.t('playlist_menu_back'))
+    .text(ctx.t('playlist_menu_back'))
     .row()
 
+  const selectedPlaylist = ctx.dbuser.playlists.find(
+    (p) => p.id === ctx.dbuser.selectedPlaylistId
+  )
+
   const { message_id } = await ctx.reply(
-    ctx.i18n.t('playlist_menu', {
-      playlistName: ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].name,
+    ctx.t('playlist_menu', {
+      playlistName: selectedPlaylist?.name || '',
     }),
     {
       reply_markup: keyboard,
     }
   )
   await deleteLastMessages(ctx)
-  ctx.dbuser.lastBotMessages.push(message_id)
-  return ctx.dbuser.save()
+  await ctx.db.insert(schema.lastBotMessages).values({
+    userId: ctx.from.id,
+    messageId: message_id,
+  })
 }
 
 export async function loadPlaylistAudio(ctx: Context) {
-  const { message_id } = await ctx.reply(ctx.i18n.t('loading'), {
+  const { message_id } = await ctx.reply(ctx.t('loading'), {
     reply_markup: getLoadingKeyboard(ctx),
   })
-  ctx.dbuser.lastBotMessages.push(message_id)
+  await ctx.db.insert(schema.lastBotMessages).values({
+    userId: ctx.from.id,
+    messageId: message_id,
+  })
 
-  for (
-    let i = 0;
-    i < ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio.length;
-    i++
-  ) {
-    const audioMessage = await sendAudio(
-      ctx,
-      ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio[i].fileId
-    )
-    ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio[i].messageId =
-      audioMessage.message_id
-    ctx.dbuser.markModified(
-      `playlists.${ctx.dbuser.selectedPlaylist}.audio.${i}.messageId`
-    )
+  const selectedPlaylist = ctx.dbuser.playlists.find(
+    (p) => p.id === ctx.dbuser.selectedPlaylistId
+  )
+  if (!selectedPlaylist) return
+
+  for (const audio of selectedPlaylist.audios) {
+    const audioMessage = await sendAudio(ctx, audio.fileId)
+    await ctx.db
+      .update(schema.audios)
+      .set({ messageId: audioMessage.message_id })
+      .where(eq(schema.audios.id, audio.id))
   }
-
-  return ctx.dbuser.save()
 }

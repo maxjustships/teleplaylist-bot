@@ -1,20 +1,7 @@
-import * as findorcreate from 'mongoose-findorcreate'
-import { FindOrCreate } from '@typegoose/typegoose/lib/defaultClasses'
-import { getModelForClass, plugin, prop } from '@typegoose/typegoose'
-
-export class Audio {
-  @prop({ index: true })
-  public messageId: number
-  @prop()
-  public fileId: string
-}
-
-export class Playlist {
-  @prop()
-  public name: string
-  @prop({ default: [] })
-  public audio: Audio[]
-}
+import { eq } from 'drizzle-orm'
+import { DrizzleD1Database } from 'drizzle-orm/d1'
+import * as schema from '@/db/schema'
+import { DbUser } from '@/models/Context'
 
 export enum State {
   MainMenu = 'main_menu',
@@ -25,37 +12,47 @@ export enum State {
   AwaitingPlaylistRename = 'awaiting_playlist_rename',
 }
 
-@plugin(findorcreate)
-export class User extends FindOrCreate {
-  @prop({ required: true, index: true, unique: true })
+export async function findOrCreateUser(
+  db: DrizzleD1Database<typeof schema>,
   id: number
+): Promise<DbUser> {
+  let user = await db.query.users.findFirst({
+    where: eq(schema.users.id, id),
+    with: {
+      playlists: {
+        with: {
+          audios: true,
+        },
+      },
+      lastBotMessages: true,
+    },
+  })
 
-  @prop({ required: true, default: 'en' })
-  language: string
+  if (!user) {
+    await db.insert(schema.users).values({ id }).onConflictDoNothing()
+    user = await db.query.users.findFirst({
+      where: eq(schema.users.id, id),
+      with: {
+        playlists: {
+          with: {
+            audios: true,
+          },
+        },
+        lastBotMessages: true,
+      },
+    })
+  }
 
-  @prop({ type: () => Playlist, default: [] })
-  playlists: Playlist[]
-
-  @prop({ enum: State, default: State.MainMenu })
-  state: State
-
-  @prop({ default: -1 })
-  selectedPlaylist: number
-
-  @prop({ default: 0 })
-  selectedPage: number
-
-  @prop({ default: [] })
-  lastBotMessages: number[]
-
-  @prop({ default: Number(new Date()) })
-  lastPlaylistActiveTimestamp: number
+  return user as DbUser
 }
 
-export const UserModel = getModelForClass(User, {
-  schemaOptions: { timestamps: true },
-})
-
-export function findOrCreateUser(id: number) {
-  return UserModel.findOrCreate({ id })
+export async function updateUser(
+  db: DrizzleD1Database<typeof schema>,
+  userId: number,
+  data: Partial<typeof schema.users.$inferInsert>
+) {
+  await db
+    .update(schema.users)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(schema.users.id, userId))
 }
