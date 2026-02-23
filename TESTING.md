@@ -25,45 +25,27 @@ pnpm db:studio
 
 Since the bot uses webhooks, you need to expose your local server to the internet so Telegram can reach it.
 
-### Step 1: Start the Local Server
+### Step 1: Start the Local Server & Tunnel
+This project uses a persistent named Cloudflare tunnel `teleplaylist-dev` which is routed to `teleplaylist-dev.ardentpurple.dev`.
+
+Run both the development server and the tunnel with a single command:
 ```bash
-pnpm dev
+pnpm run dev:tunnel
 ```
-By default, this runs on `http://localhost:8787`.
+*This command runs `wrangler dev` on port 8787 and `cloudflared` concurrently.*
 
-### Step 2: Create a Persistent Tunnel
-To avoid updating the webhook every time you restart your tunnel, it is recommended to use a **named Cloudflare tunnel**.
-
-1.  **Login to Cloudflare:**
-    ```bash
-    cloudflared tunnel login
-    ```
-2.  **Create a Tunnel:**
-    ```bash
-    cloudflared tunnel create teleplaylist-dev
-    ```
-3.  **Route Traffic:**
-    Assign a CNAME to your tunnel (e.g., `dev-bot.yourdomain.com`):
-    ```bash
-    cloudflared tunnel route dns teleplaylist-dev dev-bot.yourdomain.com
-    ```
-4.  **Run the Tunnel:**
-    Use the provided script by passing your tunnel name:
-    ```bash
-    pnpm run tunnel --name teleplaylist-dev
-    ```
-
-*If you just want a quick temporary tunnel without a domain, you can use:*
+### Step 2: Set the Webhook
+Once the tunnel is running, ensure your bot's webhook points to your persistent URL:
 ```bash
-cloudflared tunnel --url http://localhost:8787
-```
-
-### Step 3: Set the Webhook
-Once your tunnel is running, set your webhook URL (e.g., `https://dev-bot.yourdomain.com`):
-```bash
-pnpm run set-webhook <YOUR_TUNNEL_URL>
+pnpm run set-webhook https://teleplaylist-dev.ardentpurple.dev
 ```
 *Note: This script automatically reads your bot token from `.dev.vars`.*
+
+### Manual Tunneling (Alternative)
+If you need to run a temporary tunnel or a different named tunnel:
+- **Temporary:** `pnpm run tunnel:temp`
+- **Named:** `pnpm run tunnel --url http://localhost:8787 <YOUR_TUNNEL_NAME>`
+
 
 ## 3. Automated Testing
 
