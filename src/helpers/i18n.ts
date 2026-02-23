@@ -290,5 +290,9 @@ export function translate(locale: string, id: string, args?: any) {
 
 export default async function fluent(ctx: Context, next: NextFunction) {
   ctx.t = (id: string, args?: any) => translate(ctx.dbuser.language, id, args)
+  ctx.useLocale = async (locale: string) => {
+    ctx.dbuser.language = locale
+    ctx.t = (id: string, args?: any) => translate(locale, id, args)
+  }
   await next()
 }
