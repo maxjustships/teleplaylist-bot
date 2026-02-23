@@ -13,12 +13,16 @@ Create a new D1 database:
 ```bash
 npx wrangler d1 create teleplaylist-bot-db
 ```
-This command will output a `database_id`. Update your `wrangler.toml` with this ID:
-```toml
-[[d1_databases]]
-binding = "DB"
-database_name = "teleplaylist-bot-db"
-database_id = "your-new-database-id"
+This command will output a `database_id`. Update your `wrangler.json` with this ID:
+```json
+"d1_databases": [
+  {
+    "binding": "DB",
+    "database_name": "teleplaylist-bot-db",
+    "database_id": "your-new-database-id",
+    "migrations_dir": "drizzle"
+  }
+]
 ```
 
 ## 2. Environment Variables
