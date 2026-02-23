@@ -17,8 +17,9 @@
     "pretty": "prettier --check src",
     "lint": "pnpm pretty && eslint src",
     "test": "vitest",
-    "tunnel": "cloudflared tunnel --url http://localhost:8787",
-    "set-webhook": "ts-node src/scripts/setWebhook.ts"
+    "tunnel": "cloudflared tunnel run",
+    "set-webhook": "ts-node src/scripts/setWebhook.ts",
+    "tunnel:temp": "cloudflared tunnel --url http://localhost:8787"
   },
   "dependencies": {
     "@fluent/bundle": "^0.19.1",

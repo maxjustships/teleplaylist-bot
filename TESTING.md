@@ -31,15 +31,35 @@ pnpm dev
 ```
 By default, this runs on `http://localhost:8787`.
 
-### Step 2: Create a Tunnel
-Use a tool like `ngrok` or `cloudflared` to create a public URL. This project comes with a script for `cloudflared`:
+### Step 2: Create a Persistent Tunnel
+To avoid updating the webhook every time you restart your tunnel, it is recommended to use a **named Cloudflare tunnel**.
+
+1.  **Login to Cloudflare:**
+    ```bash
+    cloudflared tunnel login
+    ```
+2.  **Create a Tunnel:**
+    ```bash
+    cloudflared tunnel create teleplaylist-dev
+    ```
+3.  **Route Traffic:**
+    Assign a CNAME to your tunnel (e.g., `dev-bot.yourdomain.com`):
+    ```bash
+    cloudflared tunnel route dns teleplaylist-dev dev-bot.yourdomain.com
+    ```
+4.  **Run the Tunnel:**
+    Use the provided script by passing your tunnel name:
+    ```bash
+    pnpm run tunnel --name teleplaylist-dev
+    ```
+
+*If you just want a quick temporary tunnel without a domain, you can use:*
 ```bash
-pnpm run tunnel
+cloudflared tunnel --url http://localhost:8787
 ```
-By default, this maps `localhost:8787` to a public URL.
 
 ### Step 3: Set the Webhook
-Copy your tunnel URL and run the helper script:
+Once your tunnel is running, set your webhook URL (e.g., `https://dev-bot.yourdomain.com`):
 ```bash
 pnpm run set-webhook <YOUR_TUNNEL_URL>
 ```
