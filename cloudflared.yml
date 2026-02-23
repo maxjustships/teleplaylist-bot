@@ -1,0 +1,7 @@
+tunnel: teleplaylist-dev
+credentials-file: /home/max/.cloudflared/e4b6b776-14d2-4aa3-bc82-5736284b074f.json
+
+ingress:
+  - hostname: teleplaylist-dev.ardentpurple.dev
+    service: http://localhost:8787
+  - service: http_status:404
