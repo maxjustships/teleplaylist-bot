@@ -1,4 +1,5 @@
 import { Bot } from 'grammy'
+import { UserFromGetMe } from 'grammy/types'
 import { drizzle } from 'drizzle-orm/d1'
 import Context, { Env } from '@/models/Context'
 import * as schema from '@/db/schema'
@@ -45,8 +46,11 @@ import configureI18n from '@/middlewares/configureI18n'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import { State } from '@/models/User'
 
+// Cache botInfo to avoid fetch on every request
+let botInfo: UserFromGetMe | undefined
+
 function setupBot(env: Env) {
-  const bot = new Bot<Context>(env.TOKEN)
+  const bot = new Bot<Context>(env.TOKEN, { botInfo })
 
   // Middlewares
   bot.use(ignoreOldMessageUpdates)
@@ -131,9 +135,25 @@ export default {
     _ctx: ExecutionContext
   ): Promise<Response> {
     try {
-      const bot = setupBot(env)
-
       if (request.method === 'POST') {
+        // Initialize bot info if not cached
+        if (!botInfo) {
+          if (env.BOT_INFO) {
+            try {
+              botInfo = JSON.parse(env.BOT_INFO)
+            } catch (e) {
+              console.error('Failed to parse BOT_INFO:', e)
+            }
+          }
+
+          if (!botInfo) {
+            // Create temporary bot to fetch info
+            const tempBot = new Bot(env.TOKEN)
+            botInfo = await tempBot.api.getMe()
+          }
+        }
+
+        const bot = setupBot(env)
         const update = await request.json()
         await bot.handleUpdate(update)
         return new Response('OK')
@@ -152,6 +172,9 @@ export default {
     _ctx: ExecutionContext
   ): Promise<void> {
     const bot = setupBot(env)
+    if (!botInfo) {
+      botInfo = await bot.api.getMe()
+    }
     const db = drizzle(env.DB, { schema })
     await removeStalePlaylists(db, bot, env)
   },
