@@ -1,6 +1,8 @@
 import { Bot } from 'grammy'
 import Context from '@/models/Context'
 
-const bot = new Bot<Context>(process.env.TOKEN)
+export function createBot(token: string) {
+  return new Bot<Context>(token)
+}
 
-export default bot
+export default createBot

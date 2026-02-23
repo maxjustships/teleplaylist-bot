@@ -1,21 +1,21 @@
 import { Keyboard, NextFunction } from 'grammy'
-import { Playlist, State } from '@/models/User'
+import { State, updateUser } from '@/models/User'
 import { menuCancelText, serviceText } from '@/helpers/serviceTexts'
 import Context from '@/models/Context'
 import sendMenu from '@/handlers/handleMenu'
+import * as schema from '@/db/schema'
 
 export async function handlePlaylistAddAwaitingName(ctx: Context) {
-  ctx.dbuser.state = State.AwaitingName
+  await updateUser(ctx.db, ctx.from.id, { state: State.AwaitingName })
 
-  const { message_id } = await ctx.reply(
-    ctx.i18n.t('playlist_add_name_prompt'),
-    {
-      reply_markup: new Keyboard().text(ctx.i18n.t('keyboard_cancel')),
-    }
-  )
-  ctx.dbuser.lastBotMessages.push(message_id)
+  const { message_id } = await ctx.reply(ctx.t('playlist_add_name_prompt'), {
+    reply_markup: new Keyboard().text(ctx.t('keyboard_cancel')),
+  })
 
-  return ctx.dbuser.save()
+  await ctx.db.insert(schema.lastBotMessages).values({
+    userId: ctx.from.id,
+    messageId: message_id,
+  })
 }
 
 export async function handlePlaylistAddReceivedName(
@@ -34,23 +34,30 @@ export async function handlePlaylistAddReceivedName(
 
   if (ctx.dbuser.playlists.some((playlist) => playlist.name === text)) {
     const { message_id } = await ctx.reply(
-      ctx.i18n.t('playlist_add_name_error_exists')
+      ctx.t('playlist_add_name_error_exists')
     )
-    ctx.dbuser.lastBotMessages.push(message_id)
-    return ctx.dbuser.save()
+    await ctx.db.insert(schema.lastBotMessages).values({
+      userId: ctx.from.id,
+      messageId: message_id,
+    })
+    return
   }
 
   if (serviceText.includes(text)) {
     const { message_id } = await ctx.reply(
-      ctx.i18n.t('playlist_add_name_error_service')
+      ctx.t('playlist_add_name_error_service')
     )
-    ctx.dbuser.lastBotMessages.push(message_id)
-    return ctx.dbuser.save()
+    await ctx.db.insert(schema.lastBotMessages).values({
+      userId: ctx.from.id,
+      messageId: message_id,
+    })
+    return
   }
 
-  const playlist = new Playlist()
-  playlist.name = text
-  ctx.dbuser.playlists.push(playlist)
+  await ctx.db.insert(schema.playlists).values({
+    userId: ctx.from.id,
+    name: text,
+  })
 
   return sendMenu(ctx)
 }

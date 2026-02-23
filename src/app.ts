@@ -1,7 +1,7 @@
-import 'reflect-metadata'
-// Setup @/ aliases for modules
-import 'module-alias/register'
-// Dependencies
+import { Bot, webhookCallback } from 'grammy'
+import { drizzle } from 'drizzle-orm/d1'
+import Context, { Env } from '@/models/Context'
+import * as schema from '@/db/schema'
 import handleAddAudio from '@/handlers/handleAudioAdd'
 import handleDeleteAudio from '@/handlers/handleAudioDelete'
 import sendMenu from '@/handlers/handleMenu'
@@ -25,8 +25,7 @@ import {
 } from '@/handlers/handlePlaylistRename'
 import { localeActions, sendLanguage, setLanguage } from '@/handlers/language'
 import blockIfPublic from '@/helpers/blockIfPublic'
-import bot from '@/helpers/bot'
-import i18n from '@/helpers/i18n'
+import fluent from '@/helpers/i18n'
 import removeStalePlaylists from '@/helpers/removeStalePlaylist'
 import removeUserInput from '@/helpers/removeUserInput'
 import requireState from '@/helpers/requireState'
@@ -34,38 +33,40 @@ import {
   mainMenuLanguageSelectText,
   mainMenuLanguageText,
   mainMenuNewPlaylistText,
-  mainMenuNextPageText,
   mainMenuPrevPageText,
+  mainMenuNextPageText,
   playlistMenuBackText,
   playlistMenuConfirmDeleteText,
   playlistMenuDeleteText,
   playlistMenuRenameText,
 } from '@/helpers/serviceTexts'
-import startMongo from '@/helpers/startMongo'
 import attachUser from '@/middlewares/attachUser'
 import configureI18n from '@/middlewares/configureI18n'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
-import sequentialize from '@/middlewares/sequentialize'
 import { State } from '@/models/User'
-import { run } from '@grammyjs/runner'
 
-const STALE_PLAYLIST_DELETION_RATE = 60 * 60 * 1000 // 1 hour
+let bot: Bot<Context>
 
-async function runApp() {
-  console.log('Starting app!')
-  // Mongo
-  await startMongo()
-  console.log('Mongo connected')
+function setupBot(env: Env) {
+  if (bot) return bot
+
+  bot = new Bot<Context>(env.TOKEN)
+
   // Middlewares
-  bot.use(sequentialize)
   bot.use(ignoreOldMessageUpdates)
+  bot.use(async (ctx, next) => {
+    ctx.db = drizzle(env.DB, { schema })
+    ctx.env = env
+    await next()
+  })
   bot.use(attachUser)
-  bot.use(i18n.middleware())
+  bot.use(fluent)
   bot.use(configureI18n)
   bot.use(blockIfPublic)
 
   // Commands
   bot.command('start', sendMenu)
+
   // Events
   bot.on('message', removeUserInput)
   bot.hears(
@@ -115,30 +116,35 @@ async function runApp() {
   bot.on('message:text', handlePlaylistRenameReceivedReply)
   bot.on('message:text', handlePlaylistDeleteReceivedReply)
 
-  // autodelete users with playlists open too long
-  setInterval(removeStalePlaylists(), STALE_PLAYLIST_DELETION_RATE)
-
   // Actions
   bot.callbackQuery(localeActions, setLanguage)
   bot.callbackQuery('deleteAudio', handleDeleteAudio)
-  // Errors
-  bot.catch(async (err) => {
-    console.error(err)
 
-    const ctx = err.ctx
-    await ctx.api.sendMessage(
-      process.env.ADMIN,
-      `
-\`\`\`
-${JSON.stringify(err)}
-\`\`\`
-    `
-    )
+  // Errors
+  bot.catch((err) => {
+    console.error(err)
   })
-  // Start bot
-  await bot.init()
-  run(bot)
-  console.info(`Bot ${bot.botInfo.username} is up and running`)
+
+  return bot
 }
 
-void runApp()
+export default {
+  async fetch(
+    request: Request,
+    env: Env,
+    _ctx: ExecutionContext
+  ): Promise<Response> {
+    const bot = setupBot(env)
+    return await webhookCallback(bot, 'cloudflare-workers')(request)
+  },
+
+  async scheduled(
+    _controller: ScheduledController,
+    env: Env,
+    _ctx: ExecutionContext
+  ): Promise<void> {
+    const bot = setupBot(env)
+    const db = drizzle(env.DB, { schema })
+    await removeStalePlaylists(db, bot, env)
+  },
+}

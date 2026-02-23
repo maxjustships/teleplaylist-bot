@@ -1,6 +1,0 @@
-services:
-  bot:
-    build:
-      context: .
-    command: yarn distribute
-    restart: unless-stopped

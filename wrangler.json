@@ -1,0 +1,25 @@
+{
+  "name": "teleplaylist-bot",
+  "main": "src/app.ts",
+  "compatibility_date": "2026-02-23",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "DONATION_LINK": "https://ko-fi.com/maxjustships",
+    "DONATION_FREQUENCY": "0.05"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "teleplaylist-bot-db",
+      "database_id": "aa24001f-8616-4ae6-a585-cb0dafafce78",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "0 * * * *"
+    ]
+  }
+}

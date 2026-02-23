@@ -1,22 +1,21 @@
 import Context from '@/models/Context'
+import * as schema from '@/db/schema'
+import { and, eq } from 'drizzle-orm'
 
-export default function handleDeleteAudio(ctx: Context) {
-  const messageId = ctx.callbackQuery.message.message_id
+export default async function handleDeleteAudio(ctx: Context) {
+  if (!ctx.callbackQuery?.message) return
+  const messageId = ctx.callbackQuery.message.message_id as number
 
-  const deletedSongIndex = ctx.dbuser.playlists[
-    ctx.dbuser.selectedPlaylist
-  ].audio.findIndex((audio) => audio.messageId === messageId)
-  if (deletedSongIndex === -1) {
-    return
-  }
+  if (!ctx.dbuser.selectedPlaylistId) return
 
-  ctx.dbuser.playlists[ctx.dbuser.selectedPlaylist].audio.splice(
-    deletedSongIndex,
-    1
-  )
+  await ctx.db
+    .delete(schema.audios)
+    .where(
+      and(
+        eq(schema.audios.playlistId, ctx.dbuser.selectedPlaylistId),
+        eq(schema.audios.messageId, messageId)
+      )
+    )
 
-  return Promise.all([
-    ctx.dbuser.save(),
-    ctx.api.deleteMessage(ctx.chat.id, messageId),
-  ])
+  await ctx.api.deleteMessage(ctx.chat.id, messageId)
 }

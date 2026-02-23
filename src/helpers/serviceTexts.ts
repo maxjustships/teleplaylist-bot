@@ -1,10 +1,6 @@
-import { load } from 'js-yaml'
-import { localesFiles } from '@/handlers/language'
-import { readFileSync } from 'fs'
+import { locales } from '@/helpers/i18n'
 
-const localesData = localesFiles().map((locale) =>
-  load(readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8'))
-)
+const localesData = Object.values(locales)
 
 export const mainMenuNewPlaylistText = getLocaleValuesForKey(
   'main_menu_keyboard_add'
@@ -47,5 +43,5 @@ export const serviceText = [
 ].flat()
 
 function getLocaleValuesForKey(key: string) {
-  return localesData.map((data) => data[key])
+  return localesData.map((data) => (data as Record<string, string>)[key])
 }
