@@ -1,5 +1,5 @@
 import { FluentBundle, FluentResource } from '@fluent/bundle'
-import { useFluent } from '@grammyjs/fluent'
+import { NextFunction } from 'grammy'
 import Context from '@/models/Context'
 
 export const locales = {
@@ -288,7 +288,7 @@ export function translate(locale: string, id: string, args?: any) {
   return bundle.formatPattern(message.value, args)
 }
 
-export default useFluent<Context>({
-  defaultLocale: 'en',
-  locales: bundles,
-})
+export default async function fluent(ctx: Context, next: NextFunction) {
+  ctx.t = (id: string, args?: any) => translate(ctx.dbuser.language, id, args)
+  await next()
+}

@@ -42,7 +42,6 @@ import {
   playlistMenuRenameText,
 } from '@/helpers/serviceTexts'
 import attachUser from '@/middlewares/attachUser'
-import configureI18n from '@/middlewares/configureI18n'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import { State } from '@/models/User'
 
@@ -61,7 +60,6 @@ function setupBot(env: Env) {
   })
   bot.use(attachUser)
   bot.use(fluent)
-  bot.use(configureI18n)
   bot.use(blockIfPublic)
 
   // Commands
