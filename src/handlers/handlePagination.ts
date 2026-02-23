@@ -8,6 +8,7 @@ export async function handlePaginationPrev(ctx: Context) {
   }
   ctx.dbuser.selectedPage -= 1
   await sendMenu(ctx)
+  await ctx.answerCallbackQuery()
 }
 
 export async function handlePaginationNext(ctx: Context) {
@@ -16,4 +17,5 @@ export async function handlePaginationNext(ctx: Context) {
   }
   ctx.dbuser.selectedPage += 1
   await sendMenu(ctx)
+  await ctx.answerCallbackQuery()
 }

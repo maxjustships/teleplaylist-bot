@@ -17,7 +17,7 @@ import {
 import handlePlaylistBack from '@/handlers/handlePlaylistBack'
 import {
   handlePlaylistDeleteAwaitingConfirmation,
-  handlePlaylistDeleteReceivedReply,
+  handlePlaylistDeleteConfirm,
 } from '@/handlers/handlePlaylistDelete'
 import { handlePlaylistLoad } from '@/handlers/handlePlaylistLoad'
 import {
@@ -30,17 +30,6 @@ import fluent from '@/helpers/i18n'
 import removeStalePlaylists from '@/helpers/removeStalePlaylist'
 import removeUserInput from '@/helpers/removeUserInput'
 import requireState from '@/helpers/requireState'
-import {
-  mainMenuLanguageSelectText,
-  mainMenuLanguageText,
-  mainMenuNewPlaylistText,
-  mainMenuPrevPageText,
-  mainMenuNextPageText,
-  playlistMenuBackText,
-  playlistMenuConfirmDeleteText,
-  playlistMenuDeleteText,
-  playlistMenuRenameText,
-} from '@/helpers/serviceTexts'
 import attachUser from '@/middlewares/attachUser'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import { State } from '@/models/User'
@@ -67,54 +56,22 @@ function setupBot(env: Env) {
 
   // Events
   bot.on('message', removeUserInput)
-  bot.hears(
-    mainMenuNewPlaylistText,
-    requireState(State.MainMenu),
-    handlePlaylistAddAwaitingName
-  )
-  bot.hears(
-    mainMenuPrevPageText,
-    requireState(State.MainMenu),
-    handlePaginationPrev
-  )
-  bot.hears(
-    mainMenuNextPageText,
-    requireState(State.MainMenu),
-    handlePaginationNext
-  )
-  bot.hears(mainMenuLanguageText, requireState(State.MainMenu), sendLanguage)
-  bot.hears(
-    mainMenuLanguageSelectText,
-    requireState(State.AwaitingLanguage),
-    setLanguage
-  )
-  bot.hears(
-    playlistMenuBackText,
-    requireState(State.PlaylistMenu),
-    handlePlaylistBack
-  )
-  bot.hears(
-    playlistMenuDeleteText,
-    requireState(State.PlaylistMenu),
-    handlePlaylistDeleteAwaitingConfirmation
-  )
-  bot.hears(
-    playlistMenuConfirmDeleteText,
-    requireState(State.AwaitingPlaylistDeletion),
-    handlePlaylistDeleteReceivedReply
-  )
-  bot.hears(
-    playlistMenuRenameText,
-    requireState(State.PlaylistMenu),
-    handlePlaylistRenameAwaitingRename
-  )
   bot.on('message:audio', requireState(State.PlaylistMenu), handleAddAudio)
   bot.on('message:text', handlePlaylistAddReceivedName)
-  bot.on('message:text', handlePlaylistLoad)
   bot.on('message:text', handlePlaylistRenameReceivedReply)
-  bot.on('message:text', handlePlaylistDeleteReceivedReply)
 
   // Actions
+  bot.callbackQuery('ignore', (ctx) => ctx.answerCallbackQuery())
+  bot.callbackQuery('nav_prev', handlePaginationPrev)
+  bot.callbackQuery('nav_next', handlePaginationNext)
+  bot.callbackQuery('add_playlist', handlePlaylistAddAwaitingName)
+  bot.callbackQuery('language', sendLanguage)
+  bot.callbackQuery('cancel', sendMenu)
+  bot.callbackQuery('playlist_back', handlePlaylistBack)
+  bot.callbackQuery('rename_playlist', handlePlaylistRenameAwaitingRename)
+  bot.callbackQuery('delete_playlist', handlePlaylistDeleteAwaitingConfirmation)
+  bot.callbackQuery('confirm_delete', handlePlaylistDeleteConfirm)
+  bot.callbackQuery(/^open_playlist:\d+$/, handlePlaylistLoad)
   bot.callbackQuery(localeActions, setLanguage)
   bot.callbackQuery('deleteAudio', handleDeleteAudio)
 

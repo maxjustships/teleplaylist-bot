@@ -1,4 +1,4 @@
-import { Keyboard } from 'grammy'
+import { InlineKeyboard } from 'grammy'
 import { State, updateUser } from '@/models/User'
 import Context from '@/models/Context'
 import deleteLastMessages from '@/helpers/deleteLastMessages'
@@ -27,33 +27,62 @@ export default async function sendMenu(ctx: Context) {
       })
     : ''
 
-  const { message_id } = await ctx.reply(
-    ctx.t('main_menu', {
-      playlistAmount,
-      plural: playlistAmount === 1 ? '' : 's',
-      mainInfo:
-        playlistAmount === 0
-          ? ctx.t('main_menu_info_empty')
-          : ctx.t('main_menu_info'),
-      donationInfo,
-    }),
-    {
-      reply_markup: getMainKeyboard(ctx, maxPage, selectedPage),
+  const text = ctx.t('main_menu', {
+    playlistAmount,
+    plural: playlistAmount === 1 ? '' : 's',
+    mainInfo:
+      playlistAmount === 0
+        ? ctx.t('main_menu_info_empty')
+        : ctx.t('main_menu_info'),
+    donationInfo,
+  })
+  const reply_markup = getMainKeyboard(ctx, maxPage, selectedPage)
+
+  // Try to edit the last message
+  let message_id: number | undefined
+  if (ctx.dbuser.lastBotMessages.length > 0) {
+    const lastMsg =
+      ctx.dbuser.lastBotMessages[ctx.dbuser.lastBotMessages.length - 1]
+    try {
+      const edited = await ctx.api.editMessageText(
+        ctx.chat.id,
+        lastMsg.messageId,
+        text,
+        {
+          reply_markup,
+          parse_mode: 'HTML',
+          disable_web_page_preview: true,
+        }
+      )
+      if (typeof edited !== 'boolean') {
+        message_id = edited.message_id
+      } else {
+        message_id = lastMsg.messageId
+      }
+    } catch {
+      // Edit failed (e.g., message not found or too old), send new message
+    }
+  }
+
+  if (!message_id) {
+    // If edit failed or no previous message, delete all and send new
+    await deleteLastMessages(ctx)
+    const sent = await ctx.reply(text, {
+      reply_markup,
       parse_mode: 'HTML',
       disable_web_page_preview: true,
-    }
-  )
+    })
+    message_id = sent.message_id
 
-  await deleteLastMessages(ctx)
+    await ctx.db.insert(schema.lastBotMessages).values({
+      userId: ctx.from.id,
+      messageId: message_id,
+    })
+  }
 
   await updateUser(ctx.db, ctx.from.id, {
     state: State.MainMenu,
     selectedPage,
-  })
-
-  await ctx.db.insert(schema.lastBotMessages).values({
-    userId: ctx.from.id,
-    messageId: message_id,
   })
 }
 
@@ -61,8 +90,8 @@ function getMainKeyboard(
   ctx: Context,
   maxPage: number,
   selectedPage: number
-): Keyboard {
-  const keyboard = new Keyboard()
+): InlineKeyboard {
+  const keyboard = new InlineKeyboard()
 
   for (
     let i = selectedPage * PLAYLIST_PER_PAGE;
@@ -73,37 +102,21 @@ function getMainKeyboard(
     );
     i++
   ) {
-    keyboard.text(ctx.dbuser.playlists[i].name).row()
+    const playlist = ctx.dbuser.playlists[i]
+    keyboard.text(playlist.name, `open_playlist:${playlist.id}`).row()
   }
 
-  for (const serviceButton of getMainKeyboardButtons(
-    ctx,
-    maxPage,
-    selectedPage
-  )) {
-    keyboard.text(serviceButton)
+  // Navigation row
+  if (ctx.dbuser.playlists.length > PLAYLIST_PER_PAGE) {
+    keyboard.text(ctx.t('main_menu_keyboard_left'), 'nav_prev')
+    keyboard.text(`${selectedPage + 1}/${maxPage + 1}`, 'ignore')
+    keyboard.text(ctx.t('main_menu_keyboard_right'), 'nav_next')
+    keyboard.row()
   }
+
+  // Action row
+  keyboard.text(ctx.t('main_menu_keyboard_add'), 'add_playlist')
+  keyboard.text(ctx.t('main_menu_keyboard_language'), 'language')
 
   return keyboard
-}
-
-function getMainKeyboardButtons(
-  ctx: Context,
-  maxPage: number,
-  selectedPage: number
-): string[] {
-  if (ctx.dbuser.playlists.length > 0) {
-    return [
-      ctx.t('main_menu_keyboard_language'),
-      ctx.t('main_menu_keyboard_left'),
-      `${selectedPage + 1}/${maxPage + 1}`,
-      ctx.t('main_menu_keyboard_right'),
-      ctx.t('main_menu_keyboard_add'),
-    ]
-  } else {
-    return [
-      ctx.t('main_menu_keyboard_add'),
-      ctx.t('main_menu_keyboard_language'),
-    ]
-  }
 }

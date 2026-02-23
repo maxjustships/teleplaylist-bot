@@ -1,6 +1,6 @@
-import { locales } from '@/helpers/i18n'
+import { locales, translate } from '@/helpers/i18n'
 
-const localesData = Object.values(locales)
+const localeCodes = Object.keys(locales)
 
 export const mainMenuNewPlaylistText = getLocaleValuesForKey(
   'main_menu_keyboard_add'
@@ -43,5 +43,5 @@ export const serviceText = [
 ].flat()
 
 function getLocaleValuesForKey(key: string) {
-  return localesData.map((data) => (data as Record<string, string>)[key])
+  return localeCodes.map((code) => translate(code, key))
 }

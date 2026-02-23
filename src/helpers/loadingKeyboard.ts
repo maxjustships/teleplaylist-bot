@@ -1,6 +1,6 @@
-import { Keyboard } from 'grammy'
+import { InlineKeyboard } from 'grammy'
 import Context from '@/models/Context'
 
-export default function getLoadingKeyboard(ctx: Context): Keyboard {
-  return new Keyboard().text(ctx.t('loading'))
+export default function getLoadingKeyboard(ctx: Context): InlineKeyboard {
+  return new InlineKeyboard().text(ctx.t('loading'), 'ignore')
 }
