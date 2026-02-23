@@ -91,5 +91,7 @@ export async function handlePlaylistAddReceivedName(
     name: text,
   })
 
+  await ctx.refetchUser()
+
   return sendMenu(ctx)
 }

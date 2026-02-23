@@ -39,6 +39,7 @@ export default async function removeStalePlaylists(
       env,
       t: (id: string, args?: any) => translate(user.language, id, args),
       useLocale: async () => {}, // No-op
+      refetchUser: async () => {}, // No-op
       reply: (
         text: string,
         other?: Parameters<typeof bot.api.sendMessage>[2]

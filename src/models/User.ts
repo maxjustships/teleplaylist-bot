@@ -12,11 +12,11 @@ export enum State {
   AwaitingPlaylistRename = 'awaiting_playlist_rename',
 }
 
-export async function findOrCreateUser(
+export async function fetchUser(
   db: DrizzleD1Database<typeof schema>,
   id: number
-): Promise<DbUser> {
-  let user = await db.query.users.findFirst({
+): Promise<DbUser | undefined> {
+  const user = await db.query.users.findFirst({
     where: eq(schema.users.id, id),
     with: {
       playlists: {
@@ -27,23 +27,21 @@ export async function findOrCreateUser(
       lastBotMessages: true,
     },
   })
+  return user as DbUser | undefined
+}
+
+export async function findOrCreateUser(
+  db: DrizzleD1Database<typeof schema>,
+  id: number
+): Promise<DbUser> {
+  let user = await fetchUser(db, id)
 
   if (!user) {
     await db.insert(schema.users).values({ id }).onConflictDoNothing()
-    user = await db.query.users.findFirst({
-      where: eq(schema.users.id, id),
-      with: {
-        playlists: {
-          with: {
-            audios: true,
-          },
-        },
-        lastBotMessages: true,
-      },
-    })
+    user = (await fetchUser(db, id))!
   }
 
-  return user as DbUser
+  return user
 }
 
 export async function updateUser(

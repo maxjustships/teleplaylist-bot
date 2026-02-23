@@ -2,7 +2,6 @@ import { InlineKeyboard, NextFunction } from 'grammy'
 import { State, updateUser } from '@/models/User'
 import Context from '@/models/Context'
 import deleteLastMessages from '@/helpers/deleteLastMessages'
-import getLoadingKeyboard from '@/helpers/loadingKeyboard'
 import sendAudio from '@/handlers/sendAudio'
 import * as schema from '@/db/schema'
 import { eq } from 'drizzle-orm'
@@ -25,8 +24,7 @@ export async function handlePlaylistLoad(ctx: Context, next: NextFunction) {
     lastPlaylistActiveTimestamp: Date.now(),
   })
 
-  // Refresh ctx.dbuser manually for subsequent calls in same request
-  ctx.dbuser.selectedPlaylistId = playlist.id
+  await ctx.refetchUser()
 
   await ctx.answerCallbackQuery()
   await loadPlaylistAudio(ctx)
@@ -76,17 +74,10 @@ export async function loadPlaylistMenu(ctx: Context) {
 }
 
 export async function loadPlaylistAudio(ctx: Context) {
-  // We send a temporary loading message which will be deleted later by deleteLastMessages if needed,
-  // but here we just want to show progress.
-  const { message_id: loadingId } = await ctx.reply(ctx.t('loading'), {
-    reply_markup: getLoadingKeyboard(ctx),
-  })
-
   const selectedPlaylist = ctx.dbuser.playlists.find(
     (p) => p.id === ctx.dbuser.selectedPlaylistId
   )
   if (!selectedPlaylist) {
-    await ctx.api.deleteMessage(ctx.chat.id, loadingId).catch(() => {})
     return
   }
 
@@ -97,6 +88,4 @@ export async function loadPlaylistAudio(ctx: Context) {
       .set({ messageId: audioMessage.message_id })
       .where(eq(schema.audios.id, audio.id))
   }
-
-  await ctx.api.deleteMessage(ctx.chat.id, loadingId).catch(() => {})
 }
