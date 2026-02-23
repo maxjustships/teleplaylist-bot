@@ -51,6 +51,13 @@ function setupBot(env: Env) {
   bot.use(fluent)
   bot.use(blockIfPublic)
 
+  bot.use(async (ctx, next) => {
+    if (ctx.chat?.type === 'private') {
+      await ctx.replyWithChatAction('typing')
+    }
+    await next()
+  })
+
   // Commands
   bot.command('start', async (ctx) => {
     await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id).catch(() => {})

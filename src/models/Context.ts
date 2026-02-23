@@ -23,6 +23,7 @@ interface Context extends BaseContext {
   env: Env
   t: (id: string, args?: any) => string
   useLocale: (locale: string) => Promise<void>
+  refetchUser: () => Promise<void>
 }
 
 export default Context

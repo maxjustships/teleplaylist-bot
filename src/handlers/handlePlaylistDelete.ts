@@ -66,10 +66,7 @@ export async function handlePlaylistDeleteConfirm(ctx: Context) {
       .where(eq(schema.playlists.id, ctx.dbuser.selectedPlaylistId))
   }
 
-  // Refresh ctx.dbuser for sendMenu
-  ctx.dbuser.playlists = ctx.dbuser.playlists.filter(
-    (p) => p.id !== ctx.dbuser.selectedPlaylistId
-  )
+  await ctx.refetchUser()
 
   await ctx.answerCallbackQuery()
   return sendMenu(ctx)

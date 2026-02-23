@@ -100,11 +100,7 @@ export async function handlePlaylistRenameReceivedReply(
       .set({ name: text })
       .where(eq(schema.playlists.id, ctx.dbuser.selectedPlaylistId))
 
-    // Update in memory for loadPlaylistMenu
-    const p = ctx.dbuser.playlists.find(
-      (p) => p.id === ctx.dbuser.selectedPlaylistId
-    )
-    if (p) p.name = text
+    await ctx.refetchUser()
   }
 
   await updateUser(ctx.db, ctx.from.id, { state: State.PlaylistMenu })
