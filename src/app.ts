@@ -1,4 +1,4 @@
-import { Bot, webhookCallback } from 'grammy'
+import { Bot } from 'grammy'
 import { drizzle } from 'drizzle-orm/d1'
 import Context, { Env } from '@/models/Context'
 import * as schema from '@/db/schema'
@@ -45,12 +45,8 @@ import configureI18n from '@/middlewares/configureI18n'
 import ignoreOldMessageUpdates from '@/middlewares/ignoreOldMessageUpdates'
 import { State } from '@/models/User'
 
-let bot: Bot<Context>
-
 function setupBot(env: Env) {
-  if (bot) return bot
-
-  bot = new Bot<Context>(env.TOKEN)
+  const bot = new Bot<Context>(env.TOKEN)
 
   // Middlewares
   bot.use(ignoreOldMessageUpdates)
@@ -134,8 +130,20 @@ export default {
     env: Env,
     _ctx: ExecutionContext
   ): Promise<Response> {
-    const bot = setupBot(env)
-    return webhookCallback(bot, 'cloudflare-mod')(request)
+    try {
+      const bot = setupBot(env)
+
+      if (request.method === 'POST') {
+        const update = await request.json()
+        await bot.handleUpdate(update)
+        return new Response('OK')
+      }
+
+      return new Response('Not Found', { status: 404 })
+    } catch (err) {
+      console.error(err)
+      return new Response('Internal Server Error', { status: 500 })
+    }
   },
 
   async scheduled(
