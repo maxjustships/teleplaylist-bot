@@ -135,8 +135,7 @@ export default {
     _ctx: ExecutionContext
   ): Promise<Response> {
     const bot = setupBot(env)
-    const handleUpdate = webhookCallback(bot, 'cloudflare')
-    return handleUpdate(request)
+    return webhookCallback(bot, 'cloudflare-mod')(request)
   },
 
   async scheduled(
