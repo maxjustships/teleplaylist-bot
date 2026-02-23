@@ -52,13 +52,16 @@ function setupBot(env: Env) {
   bot.use(blockIfPublic)
 
   // Commands
-  bot.command('start', sendMenu)
+  bot.command('start', async (ctx) => {
+    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id).catch(() => {})
+    return sendMenu(ctx)
+  })
 
   // Events
-  bot.on('message', removeUserInput)
   bot.on('message:audio', requireState(State.PlaylistMenu), handleAddAudio)
   bot.on('message:text', handlePlaylistAddReceivedName)
   bot.on('message:text', handlePlaylistRenameReceivedReply)
+  bot.on('message', removeUserInput)
 
   // Actions
   bot.callbackQuery('ignore', (ctx) => ctx.answerCallbackQuery())

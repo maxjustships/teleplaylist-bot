@@ -50,6 +50,7 @@ export async function handlePlaylistAddReceivedName(
   }
 
   const text = ctx.msg.text.trim()
+  await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id).catch(() => {})
 
   if (ctx.dbuser.playlists.some((playlist) => playlist.name === text)) {
     // We send error and then wait for another name.
