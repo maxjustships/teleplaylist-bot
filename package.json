@@ -17,10 +17,10 @@
     "pretty": "prettier --check src",
     "lint": "pnpm pretty && eslint src",
     "test": "vitest",
-    "tunnel": "cloudflared tunnel run",
+    "tunnel": "cloudflared tunnel run --url http://localhost:8787",
     "set-webhook": "ts-node src/scripts/setWebhook.ts",
     "tunnel:temp": "cloudflared tunnel --url http://localhost:8787",
-    "dev:tunnel": "concurrently -n 'wrangler,cloudflared' -c 'bgBlue,bgGreen' \"wrangler dev\" \"cloudflared tunnel run teleplaylist-dev --url http://localhost:8787\""
+    "dev:tunnel": "concurrently -n 'wrangler,cloudflared' -c 'bgBlue,bgGreen' \"wrangler dev\" \"cloudflared tunnel --config cloudflared.yml run\""
   },
   "dependencies": {
     "@fluent/bundle": "^0.19.1",
