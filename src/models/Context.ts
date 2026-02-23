@@ -1,5 +1,4 @@
 import { Context as BaseContext } from 'grammy'
-import { FluentContext } from '@grammyjs/fluent'
 import * as schema from '@/db/schema'
 import { DrizzleD1Database } from 'drizzle-orm/d1'
 
@@ -18,10 +17,11 @@ type DbUser = typeof schema.users.$inferSelect & {
   lastBotMessages: (typeof schema.lastBotMessages.$inferSelect)[]
 }
 
-interface Context extends BaseContext, FluentContext {
+interface Context extends BaseContext {
   dbuser: DbUser
   db: DrizzleD1Database<typeof schema>
   env: Env
+  t: (id: string, args?: any) => string
 }
 
 export default Context

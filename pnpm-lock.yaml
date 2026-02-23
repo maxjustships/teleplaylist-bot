@@ -11,18 +11,9 @@ importers:
       '@fluent/bundle':
         specifier: ^0.19.1
         version: 0.19.1
-      '@fluent/langneg':
-        specifier: ^0.7.0
-        version: 0.7.0
-      '@grammyjs/fluent':
-        specifier: ^1.0.3
-        version: 1.0.3(@moebius/fluent@1.1.0)(grammy@1.40.0)
       drizzle-orm:
         specifier: ^0.45.1
         version: 0.45.1(@cloudflare/workers-types@4.20260228.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.6.2)
-      fluent:
-        specifier: ^0.13.0
-        version: 0.13.0
       grammy:
         specifier: 1.40.0
         version: 1.40.0
@@ -634,28 +625,9 @@ packages:
     resolution: {integrity: sha512-bIZEUzOI1jkhviX2cp5vNyXQc6olzb2ohewQubuYlMXZ2Q/XjBO0x0XhGPvc9fjSIiUN0vw+0hq53BJ4eQSJKQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@fluent/bundle@0.17.1':
-    resolution: {integrity: sha512-CRFNT9QcSFAeFDneTF59eyv3JXFGhIIN4boUO2y22YmsuuKLyDk+N1I/NQUYz9Ab63e6V7T6vItoZIG/2oOOuw==}
-    engines: {node: '>=12.0.0', npm: '>=7.0.0'}
-
   '@fluent/bundle@0.19.1':
     resolution: {integrity: sha512-SWJLZrPamDPsJlFFOW1nkgN0j0rbPbmSdmK0XAoXlyqKieLtMVl4vzng3aR5pwKoUx0scug8+YY2oct3fdfy9A==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
-
-  '@fluent/langneg@0.6.2':
-    resolution: {integrity: sha512-YF4gZ4sLYRQfctpUR2uhb5UyPUYY5n/bi3OaED/Q4awKjPjlaF8tInO3uja7pnLQcmLTURkZL7L9zxv2Z5NDwg==}
-    engines: {node: '>=12.0.0', npm: '>=7.0.0'}
-
-  '@fluent/langneg@0.7.0':
-    resolution: {integrity: sha512-StAM0vgsD1QK+nFikaKs9Rxe3JGNipiXrpmemNGwM4gWERBXPe9gjzsBoKjgBgq1Vyiy+xy/C652QIWY+MPyYw==}
-    engines: {node: '>=14.0.0', npm: '>=7.0.0'}
-
-  '@grammyjs/fluent@1.0.3':
-    resolution: {integrity: sha512-vM/58mhX/wlZWeCL5I/0449EnJM3KB1o+HkD2dZ6eBrbWxQyVxbLffx0ur3BxOtb7BFsUHb7PctxhI0/JN/K2w==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      '@moebius/fluent': ^1.0.0
-      grammy: ^1.5.0
 
   '@grammyjs/types@3.24.0':
     resolution: {integrity: sha512-qQIEs4lN5WqUdr4aT8MeU6UFpMbGYAvcvYSW1A4OO1PABGJQHz/KLON6qvpf+5RxaNDQBxiY2k2otIhg/AG7RQ==}
@@ -838,10 +810,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
-
-  '@moebius/fluent@1.1.0':
-    resolution: {integrity: sha512-mW+iT2/tnGQtWmmVtpkk8hY6Jy7w3s9vXi+TL/ktyOBDHE3nUuc4haLO/2cSwKCNQT1EOjZXHZtHEZcaZBjfmA==}
-    engines: {node: '>=12'}
 
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
@@ -1491,11 +1459,6 @@ packages:
 
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
-
-  fluent@0.13.0:
-    resolution: {integrity: sha512-veZ4VyzNiBnRAfUagBpXWVyOHPns7z00UtuYWoqWjlogFgHGzDo3b2v3+gNkxxyd44uPP6NBUkgLaHlC6sQm5g==}
-    engines: {node: '>=8.9.0'}
-    deprecated: Renamed to @fluent/bundle 0.13.0
 
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
@@ -2618,18 +2581,7 @@ snapshots:
       '@eslint/core': 1.1.0
       levn: 0.4.1
 
-  '@fluent/bundle@0.17.1': {}
-
   '@fluent/bundle@0.19.1': {}
-
-  '@fluent/langneg@0.6.2': {}
-
-  '@fluent/langneg@0.7.0': {}
-
-  '@grammyjs/fluent@1.0.3(@moebius/fluent@1.1.0)(grammy@1.40.0)':
-    dependencies:
-      '@moebius/fluent': 1.1.0
-      grammy: 1.40.0
 
   '@grammyjs/types@3.24.0': {}
 
@@ -2748,11 +2700,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
-
-  '@moebius/fluent@1.1.0':
-    dependencies:
-      '@fluent/bundle': 0.17.1
-      '@fluent/langneg': 0.6.2
 
   '@pkgr/core@0.2.9': {}
 
@@ -3515,8 +3462,6 @@ snapshots:
       keyv: 4.5.4
 
   flatted@3.3.3: {}
-
-  fluent@0.13.0: {}
 
   for-each@0.3.5:
     dependencies:
