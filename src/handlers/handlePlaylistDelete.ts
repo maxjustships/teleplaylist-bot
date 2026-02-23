@@ -1,12 +1,11 @@
-import { Keyboard, NextFunction } from 'grammy'
+import { InlineKeyboard } from 'grammy'
 import { State, updateUser } from '@/models/User'
-import { loadPlaylistMenu } from '@/handlers/handlePlaylistLoad'
-import { menuCancelText } from '@/helpers/serviceTexts'
 import Context from '@/models/Context'
 import deleteAudio from '@/handlers/deleteAudio'
 import sendMenu from '@/handlers/handleMenu'
 import * as schema from '@/db/schema'
 import { eq } from 'drizzle-orm'
+import deleteLastMessages from '@/helpers/deleteLastMessages'
 
 export async function handlePlaylistDeleteAwaitingConfirmation(ctx: Context) {
   await updateUser(ctx.db, ctx.from.id, {
@@ -17,35 +16,46 @@ export async function handlePlaylistDeleteAwaitingConfirmation(ctx: Context) {
     (p) => p.id === ctx.dbuser.selectedPlaylistId
   )
 
-  const { message_id } = await ctx.reply(
-    ctx.t('playlist_menu_delete_prompt', {
-      playlistName: selectedPlaylist?.name || '',
-    }),
-    {
-      reply_markup: getConfirmKeyboard(ctx),
+  const text = ctx.t('playlist_menu_delete_prompt', {
+    playlistName: selectedPlaylist?.name || '',
+  })
+  const reply_markup = getConfirmKeyboard(ctx)
+
+  if (ctx.dbuser.lastBotMessages.length > 0) {
+    const lastMsg =
+      ctx.dbuser.lastBotMessages[ctx.dbuser.lastBotMessages.length - 1]
+    try {
+      await ctx.api.editMessageText(ctx.chat.id, lastMsg.messageId, text, {
+        reply_markup,
+      })
+      await ctx.answerCallbackQuery()
+      return
+    } catch {
+      // Edit failed
     }
-  )
+  }
+
+  await deleteLastMessages(ctx)
+  const sent = await ctx.reply(text, {
+    reply_markup,
+  })
+
   await ctx.db.insert(schema.lastBotMessages).values({
     userId: ctx.from.id,
-    messageId: message_id,
+    messageId: sent.message_id,
   })
+  await ctx.answerCallbackQuery()
 }
 
-function getConfirmKeyboard(ctx: Context): Keyboard {
-  return new Keyboard()
-    .text(ctx.t('playlist_menu_confirm_delete'))
-    .text(ctx.t('keyboard_cancel'))
+function getConfirmKeyboard(ctx: Context): InlineKeyboard {
+  return new InlineKeyboard()
+    .text(ctx.t('playlist_menu_confirm_delete'), 'confirm_delete')
+    .text(ctx.t('keyboard_cancel'), 'cancel')
 }
 
-export async function handlePlaylistDeleteReceivedReply(
-  ctx: Context,
-  next: NextFunction
-) {
+export async function handlePlaylistDeleteConfirm(ctx: Context) {
   if (ctx.dbuser.state !== State.AwaitingPlaylistDeletion) {
-    return next()
-  }
-  if (menuCancelText.includes(ctx.msg.text)) {
-    return loadPlaylistMenu(ctx)
+    return
   }
 
   await deleteAudio(ctx)
@@ -56,10 +66,11 @@ export async function handlePlaylistDeleteReceivedReply(
       .where(eq(schema.playlists.id, ctx.dbuser.selectedPlaylistId))
   }
 
-  // Refresh ctx.dbuser for sendMenu if needed, but it's okay for now
+  // Refresh ctx.dbuser for sendMenu
   ctx.dbuser.playlists = ctx.dbuser.playlists.filter(
     (p) => p.id !== ctx.dbuser.selectedPlaylistId
   )
 
+  await ctx.answerCallbackQuery()
   return sendMenu(ctx)
 }
