@@ -26,7 +26,7 @@ pnpm db:studio
 Since the bot uses webhooks, you need to expose your local server to the internet so Telegram can reach it.
 
 ### Step 1: Start the Local Server & Tunnel
-This project uses a persistent named Cloudflare tunnel `teleplaylist-dev` which is routed to `teleplaylist-dev.ardentpurple.dev` via a local `cloudflared.yml` configuration.
+This project uses a persistent named Cloudflare tunnel `teleplaylist-dev` which is routed to a hostname you configure in your local `cloudflared.yml`.
 
 Run both the development server and the tunnel with a single command:
 ```bash
@@ -37,7 +37,7 @@ pnpm run dev:tunnel
 ### Step 2: Set the Webhook
 Once the tunnel is running, ensure your bot's webhook points to your persistent URL:
 ```bash
-pnpm run set-webhook https://teleplaylist-dev.ardentpurple.dev
+pnpm run set-webhook https://<your-tunnel-hostname>
 ```
 *Note: This script automatically reads your bot token from `.dev.vars`.*
 

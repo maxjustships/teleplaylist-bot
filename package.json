@@ -1,12 +1,15 @@
 {
-  "name": "telegram-playlist-bot",
+  "name": "teleplaylist-bot",
   "version": "1.0.0",
-  "description": "Telegram bot that allows you to manage playlists. Cloudflare Workers + D1 + Drizzle ORM",
+  "description": "Telegram bot for organizing audio files into playlists. Built with grammY, Cloudflare Workers, D1, and Drizzle ORM.",
   "main": "src/app.ts",
-  "repository": "https://github.com/Borodutch/telegram-bot-template",
-  "author": "moody_cookie <reishmax@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxjustships/teleplaylist-bot.git"
+  },
+  "author": "Max",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
@@ -24,31 +27,31 @@
   },
   "dependencies": {
     "@fluent/bundle": "^0.19.1",
-    "drizzle-orm": "^0.45.1",
-    "grammy": "1.40.0"
+    "drizzle-orm": "^0.45.2",
+    "grammy": "1.45.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260228.0",
+    "@cloudflare/workers-types": "^5.20260717.1",
     "@eslint/js": "^10.0.1",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^25.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.56.0",
-    "@typescript-eslint/parser": "^8.56.0",
-    "@vitest/coverage-v8": "^4.0.18",
-    "better-sqlite3": "^12.6.2",
-    "concurrently": "^9.2.1",
-    "dotenv": "^17.3.1",
-    "drizzle-kit": "^0.31.9",
-    "eslint": "^10.0.1",
+    "@types/node": "^26.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.64.0",
+    "@typescript-eslint/parser": "^8.64.0",
+    "@vitest/coverage-v8": "^4.1.10",
+    "better-sqlite3": "^12.11.1",
+    "concurrently": "^10.0.3",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-prettier": "^5.5.6",
     "nodemon": "^3.1.14",
-    "prettier": "^3.8.1",
+    "prettier": "^3.9.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0",
-    "vitest": "^4.0.18",
-    "wrangler": "^4.67.0"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.1.10",
+    "wrangler": "^4.112.0"
   }
 }
