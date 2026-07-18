@@ -13,8 +13,12 @@ describe('i18n helper', () => {
   })
 
   it('should handle arguments in translations', () => {
-    const result = translate('en', 'playlist_menu_delete_prompt', { playlistName: 'My Hits' })
-    expect(result).toMatch(/Are you sure you want to delete the .*My Hits.* playlist\?/)
+    const result = translate('en', 'playlist_menu_delete_prompt', {
+      playlistName: 'My Hits',
+    })
+    expect(result).toMatch(
+      /Are you sure you want to delete the .*My Hits.* playlist\?/
+    )
   })
 
   it('should fallback to English if locale is not found', () => {
